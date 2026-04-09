@@ -5,18 +5,6 @@ import { LoginPage } from '@/pages/auth'
 import { SignupSelectPage, SignupPage } from '@/pages/signup'
 import { MypagePage, MypageEditPage, ChangePasswordPage } from '@/pages/mypage'
 import { QuizListPage, QuizExamPage, QuizResultPage } from '@/pages/quiz'
-import {
-  QnaListPage,
-  QnaWritePage,
-  QnaDetailPage,
-  QnaEditPage,
-} from '@/pages/qna'
-import {
-  CommunityListPage,
-  CommunityWritePage,
-  CommunityDetailPage,
-  CommunityEditPage,
-} from '@/pages/community'
 import { ComponentShowcase } from '@/pages/ComponentShowcase'
 
 export function RouterProvider() {
@@ -45,24 +33,6 @@ export function RouterProvider() {
         <Route path="quiz/:quizId">
           <Route path="exam" element={<QuizExamPage />} />
           <Route path="result" element={<QuizResultPage />} />
-        </Route>
-
-        <Route path="qna">
-          <Route index element={<QnaListPage />} />
-          <Route path="write" element={<QnaWritePage />} />
-          <Route path=":questionId">
-            <Route index element={<QnaDetailPage />} />
-            <Route path="edit" element={<QnaEditPage />} />
-          </Route>
-        </Route>
-
-        <Route path="community">
-          <Route index element={<CommunityListPage />} />
-          <Route path="write" element={<CommunityWritePage />} />
-          <Route path=":postId">
-            <Route index element={<CommunityDetailPage />} />
-            <Route path="edit" element={<CommunityEditPage />} />
-          </Route>
         </Route>
 
         <Route path="showcase" element={<ComponentShowcase />} />

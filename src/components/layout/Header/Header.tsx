@@ -40,6 +40,7 @@ export function Header({
             </button>
 
             <nav className="flex items-center gap-15">
+              {/* TODO: 커뮤니티, 질의응답 페이지 추가되면 외부 링크 연결하기 */}
               <button
                 onClick={() => navigate(ROUTES.COMMUNITY.LIST)}
                 className="hover:text-primary px-2.5 py-2.5 text-lg tracking-tight text-gray-900 transition-colors duration-150"
