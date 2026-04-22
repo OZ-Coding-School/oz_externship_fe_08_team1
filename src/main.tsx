@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import { QueryProvider } from './providers/QueryProvider'
+import { ToastProvider } from './providers/ToastProvider'
 import './App.css'
 import App from './App'
 
@@ -17,7 +18,9 @@ function renderApp() {
     <StrictMode>
       <BrowserRouter>
         <QueryProvider>
-          <App />
+          <ToastProvider>
+            <App />
+          </ToastProvider>
         </QueryProvider>
       </BrowserRouter>
     </StrictMode>
