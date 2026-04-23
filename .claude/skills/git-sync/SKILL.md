@@ -14,18 +14,18 @@ argument-hint: [작업 설명 (선택)]
 - `git status`와 `git diff`로 현재 변경사항을 파악합니다.
 - 변경된 파일과 내용을 분석하여 작업 내역을 요약합니다.
 
-## 2단계: 원격 dev 브랜치 기준 최신화 확인
+## 2단계: 원격 developelop 브랜치 기준 최신화 확인
 
 - 먼저 `git branch --show-current`로 현재 브랜치를 확인합니다.
-- **현재 브랜치가 `main` 또는 `dev`인 경우** → 이 단계를 건너뛰고 3단계로 진행합니다.
-- `git fetch origin dev`로 원격 dev 브랜치를 최신화합니다.
-- `git log HEAD..origin/dev --oneline`으로 현재 브랜치에 반영되지 않은 dev 커밋이 있는지 확인합니다.
+- **현재 브랜치가 `main` 또는 `develop`인 경우** → 이 단계를 건너뛰고 3단계로 진행합니다.
+- `git fetch origin develop`로 원격 develop 브랜치를 최신화합니다.
+- `git log HEAD..origin/develop --oneline`으로 현재 브랜치에 반영되지 않은 develop 커밋이 있는지 확인합니다.
 - **반영되지 않은 커밋이 없으면** (이미 최신 상태) → 3단계로 진행합니다.
 - **반영되지 않은 커밋이 있으면** → 사용자에게 미반영 커밋 목록을 보여주고 rebase 진행 여부를 확인받습니다.
-  - 승인 시: 현재 변경사항을 `git stash`로 임시 저장 → `git rebase origin/dev` 실행 → stash 복원
+  - 승인 시: 현재 변경사항을 `git stash`로 임시 저장 → `git rebase origin/develop` 실행 → stash 복원
   - **충돌 발생 시:**
     1. 충돌이 발생한 파일 목록을 사용자에게 보여줍니다.
-    2. 각 충돌 파일에 대해 현재 브랜치(ours)와 dev 브랜치(theirs)의 변경 내용을 모두 표시합니다.
+    2. 각 충돌 파일에 대해 현재 브랜치(ours)와 develop 브랜치(theirs)의 변경 내용을 모두 표시합니다.
     3. 파일별로 어떤 버전을 사용할지 (ours / theirs / 수동 편집) 사용자에게 확인받습니다.
     4. 사용자의 선택에 따라 충돌을 해결하고 `git rebase --continue`로 rebase를 완료합니다.
   - rebase 거부 시: 경고 메시지를 출력하고 3단계로 진행합니다.
