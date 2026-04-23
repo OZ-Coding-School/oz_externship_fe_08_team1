@@ -1,6 +1,63 @@
-/**
- * @figma 마이페이지_쪽지시험  https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-3499&m=dev
- */
+import { Suspense, useState } from 'react'
+import { Tabs, TabList, Tab, TabPanel } from '@/components'
+import {
+  QuizCardSkeleton,
+  QuizList,
+  QuizListErrorBoundary,
+} from '@/components/quiz'
+
+const QUIZ_STATUS = {
+  ALL: 'all',
+  DONE: 'done',
+  PENDING: 'pending',
+} as const
+
+type TabStatus = (typeof QUIZ_STATUS)[keyof typeof QUIZ_STATUS]
+
+const tabs: { label: string; value: TabStatus }[] = [
+  { label: '전체보기', value: QUIZ_STATUS.ALL },
+  { label: '응시완료', value: QUIZ_STATUS.DONE },
+  { label: '미응시', value: QUIZ_STATUS.PENDING },
+]
+
+function QuizListSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <QuizCardSkeleton key={i} />
+      ))}
+    </div>
+  )
+}
+
 export function QuizListPage() {
-  return <div>쪽지시험 목록</div>
+  const [status, setStatus] = useState<TabStatus>('all')
+
+  return (
+    <div className="flex flex-col gap-6">
+      <h1 className="text-text-heading text-[32px] leading-[140%] font-bold tracking-[-0.03em]">
+        쪽지시험
+      </h1>
+
+      <Tabs value={status} onChange={(v) => setStatus(v as TabStatus)}>
+        <TabList aria-label="쪽지시험 필터">
+          {tabs.map(({ label, value }) => (
+            <Tab key={value} value={value}>
+              {label}
+            </Tab>
+          ))}
+        </TabList>
+
+        {tabs.map(({ value }) => (
+          <TabPanel key={value} value={value} className="pt-6">
+            <QuizListErrorBoundary>
+              <Suspense fallback={<QuizListSkeleton />}>
+                <QuizList params={{ status: value }} />
+              </Suspense>
+            </QuizListErrorBoundary>
+          </TabPanel>
+        ))}
+      </Tabs>
+    </div>
+  )
 }

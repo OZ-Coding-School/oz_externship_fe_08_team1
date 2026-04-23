@@ -1,2 +1,1 @@
 export { MypageLayout } from './MypageLayout'
-export { SidebarTab } from './SidebarTab'

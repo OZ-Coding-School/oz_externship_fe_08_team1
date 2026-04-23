@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router'
 import { DefaultLayout, AuthLayout } from '@/components'
+import { MypageLayout } from '@/components/mypage'
 import { HomePage } from '@/pages/home'
 import { LoginPage } from '@/pages/auth'
 import { SignupSelectPage, SignupPage } from '@/pages/signup'
@@ -23,7 +24,7 @@ export function RouterProvider() {
       <Route element={<DefaultLayout />}>
         <Route index element={<HomePage />} />
 
-        <Route path="mypage">
+        <Route path="mypage" element={<MypageLayout />}>
           <Route index element={<MypagePage />} />
           <Route path="edit" element={<MypageEditPage />} />
           <Route path="change-password" element={<ChangePasswordPage />} />
