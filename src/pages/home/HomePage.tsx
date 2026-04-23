@@ -43,23 +43,24 @@ const TABS: TabConfig[] = [
 
 export function HomePage() {
   const [activeTab, setActiveTab] = useState<FeatureTab>('exam')
-  const current = TABS.find((t) => t.key === activeTab)!
+  const current = TABS.find((t) => t.key === activeTab) ?? TABS[0]
 
   return (
     <main className="flex flex-col">
       {/* Feature section */}
-      <section className="bg-[#FAFAFB] py-20">
-        <h2 className="text-text-heading pt-10 pb-10 text-center text-4xl leading-tight font-bold whitespace-pre-line">
-          {current.heading}
-        </h2>
+      <section className="bg-bg-subtle py-20">
         <div className="max-w-container mx-auto px-4">
+          <h2 className="text-text-heading mb-10 text-center text-4xl leading-tight font-bold whitespace-pre-line">
+            {current.heading}
+          </h2>
+
           {/* Tab navigation */}
           <div
             role="tablist"
             aria-label="서비스 기능 탭"
             className="flex justify-center"
           >
-            <div className="border-border-base inline-flex rounded-full border bg-white p-1">
+            <div className="border-border-base bg-bg-base inline-flex gap-2 rounded-full border p-2">
               {TABS.map((tab) => (
                 <button
                   key={tab.key}
@@ -67,10 +68,10 @@ export function HomePage() {
                   aria-selected={activeTab === tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={[
-                    'rounded-full px-7 py-2.5 text-base font-semibold transition-colors duration-150 outline-none',
+                    'rounded-full px-8.5 py-3.5 text-base font-semibold transition-colors duration-150 outline-none',
                     'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
                     activeTab === tab.key
-                      ? 'bg-primary text-white'
+                      ? 'bg-primary text-text-inverse'
                       : 'text-text-muted hover:text-text-body',
                   ].join(' ')}
                 >
@@ -80,21 +81,29 @@ export function HomePage() {
             </div>
           </div>
 
-          {/* Section content */}
-          <div className="mt-16 flex flex-col items-center gap-14">
+          {/* Tab content — key 변경 시 재마운트되어 애니메이션 재실행 */}
+          <div
+            key={activeTab}
+            role="tabpanel"
+            className="animate-fade-in mt-16"
+          >
             <img
               src={current.image}
               alt={current.alt}
-              className="w-full max-w-5xl"
+              className="mx-auto block w-full max-w-5xl"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
       </section>
-      {/* Hero section */}
-      <section className="flex justify-center pt-20 pb-20">
+      {/* Banner section */}
+      <section className="flex justify-center py-20">
         <img
           src={bannerImg}
           alt="함께 묻고 답하며, 현직자의 피드백으로 빠르게 성장할 수 있어요"
+          loading="eager"
+          fetchPriority="high"
         />
       </section>
     </main>
