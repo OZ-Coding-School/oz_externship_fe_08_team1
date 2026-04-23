@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './assets/fonts/pretendard.css';
 
 @theme {
   /* ============================================================
@@ -144,8 +145,8 @@
      TYPOGRAPHY TOKENS
      ============================================================ */
 
-  --font-sans: 'Pretendard', system-ui, sans-serif;
-  --font-heading: 'Pretendard', system-ui, sans-serif;
+  --font-sans: 'Pretendard Variable', system-ui, sans-serif;
+  --font-heading: 'Pretendard Variable', system-ui, sans-serif;
   --font-mono: ui-monospace, Consolas, monospace;
 
   --font-size-xs: 12px;
@@ -250,6 +251,10 @@
     opacity: 0;
     transform: translateX(100%);
   }
+}
+
+body {
+  font-family: var(--font-sans);
 }
 
 button {
