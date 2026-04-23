@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Spinner } from '@/components'
 import { QuizCard } from '@/components/quiz/QuizCard'
 import { useDeployments } from '@/features/exams/deployments'
@@ -15,14 +14,10 @@ export function QuizList({ params }: QuizListProps) {
 
   const items = data.pages.flatMap((page) => page.results)
 
-  const handleIntersect = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
-
   const sentinelRef = useIntersectionObserver({
-    onIntersect: handleIntersect,
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) fetchNextPage()
+    },
     enabled: hasNextPage,
   })
 
