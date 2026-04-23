@@ -14,7 +14,7 @@ argument-hint: [작업 설명 (선택)]
 - `git status`와 `git diff`로 현재 변경사항을 파악합니다.
 - 변경된 파일과 내용을 분석하여 작업 내역을 요약합니다.
 
-## 2단계: 원격 developelop 브랜치 기준 최신화 확인
+## 2단계: 원격 develop 브랜치 기준 최신화 확인
 
 - 먼저 `git branch --show-current`로 현재 브랜치를 확인합니다.
 - **현재 브랜치가 `main` 또는 `develop`인 경우** → 이 단계를 건너뛰고 3단계로 진행합니다.
