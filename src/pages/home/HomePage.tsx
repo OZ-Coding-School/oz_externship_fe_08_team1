@@ -113,9 +113,9 @@ export function HomePage() {
   return (
     <main className="flex flex-col">
       {/* Feature section */}
-      <section className="bg-bg-subtle py-20">
+      <section className="bg-bg-subtle pt-37 pb-31">
         <div className="max-w-container mx-auto px-4">
-          <h2 className="text-text-heading mb-10 text-center text-4xl leading-tight font-bold whitespace-pre-line">
+          <h2 className="text-text-heading mb-10 text-center text-5xl leading-normal font-bold tracking-[-0.03em] whitespace-pre-line">
             {current.heading}
           </h2>
 
@@ -124,7 +124,7 @@ export function HomePage() {
             <div
               role="tablist"
               aria-label="서비스 기능 탭"
-              className="border-border-base bg-bg-base inline-flex gap-2 rounded-full border p-2"
+              className="border-border-base bg-bg-base inline-flex gap-2.5 rounded-full border p-2"
             >
               {TABS.map((tab) => (
                 <button
@@ -135,7 +135,7 @@ export function HomePage() {
                   aria-selected={activeTab === tab.key}
                   onClick={() => setActiveTab(tab.key)}
                   className={[
-                    'rounded-full px-8.5 py-3.5 text-base font-semibold transition-colors duration-150 outline-none',
+                    'rounded-full px-9.5 py-5 text-xl leading-[1.4] font-bold tracking-[-0.03em] transition-colors duration-150 outline-none',
                     'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2',
                     activeTab === tab.key
                       ? 'bg-primary text-text-inverse'
@@ -153,7 +153,7 @@ export function HomePage() {
             key={activeTab}
             role="tabpanel"
             aria-labelledby={`tab-${activeTab}`}
-            className="animate-fade-in mt-16"
+            className="animate-fade-in mt-8.5"
           >
             <ImageWithStates
               src={current.image}
@@ -165,7 +165,7 @@ export function HomePage() {
       </section>
 
       {/* Banner section */}
-      <section className="flex justify-center py-20">
+      <section className="flex justify-center py-35">
         <ImageWithStates
           src={bannerImg}
           alt="함께 묻고 답하며, 현직자의 피드백으로 빠르게 성장할 수 있어요"
