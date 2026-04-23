@@ -72,11 +72,11 @@ export function LoginPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
+    <main className="flex flex-1 flex-col items-center px-4 pt-22">
       <div className="flex w-full max-w-sm flex-col items-center gap-6">
         <div className="flex w-full flex-col items-center gap-4">
-          <img src={logo} alt="OZ 오즈코딩스쿨" className="h-5 w-auto" />
-          <p className="text-text-muted text-sm">
+          <img src={logo} alt="OZ 오즈코딩스쿨" className="h-6 w-45" />
+          <p className="text-base text-gray-600">
             아직 회원이 아니신가요?{' '}
             <Link to="/signup" className="text-primary font-medium">
               회원가입 하기
@@ -84,7 +84,7 @@ export function LoginPage() {
           </p>
         </div>
 
-        <div className="mt-4 flex w-full flex-col gap-3">
+        <div className="mt-12 flex w-full flex-col gap-3">
           <SocialLoginButton provider="kakao" />
           <SocialLoginButton provider="naver" />
         </div>
@@ -113,8 +113,7 @@ export function LoginPage() {
             isError={Boolean(passwordError)}
             errorMessage={passwordError}
           />
-
-          <div className="text-text-muted flex gap-2 text-sm">
+          <div className="flex gap-2 text-sm text-gray-600">
             <button type="button">아이디 찾기</button>
             <span>|</span>
             <button type="button">비밀번호 찾기</button>
