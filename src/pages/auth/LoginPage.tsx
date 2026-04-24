@@ -1,17 +1,23 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { Input } from '@/components/common/Input'
 import { PasswordInput } from '@/components/common/PasswordInput'
 import { Button } from '@/components/common/Button'
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import { AlertModal } from '@/components/common/Modal/AlertModal'
 import { useLogin } from '@/features/accounts/login/queries'
+import { meQueries } from '@/features/accounts/me/queries'
+import { useAuthStore } from '@/stores/authStore'
 import type { AxiosError } from 'axios'
 import type { LoginErrorResponse } from '@/features/accounts/login/types'
 import logo from '@/assets/logo.png'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { login: setAuth } = useAuthStore()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -36,8 +42,20 @@ export function LoginPage() {
     login(
       { email, password },
       {
-        onSuccess: (data) => {
-          localStorage.setItem('accesstoken', data.access_token)
+        onSuccess: async (data) => {
+          localStorage.setItem('accessToken', data.access_token)
+
+          try {
+            const meData = await queryClient.fetchQuery(meQueries.detail())
+            setAuth({
+              email: meData.email,
+              nickname: meData.nickname,
+              profileImage: meData.profile_img_url,
+            })
+          } catch {
+            setAuth({ email, nickname: '' })
+          }
+
           navigate('/')
         },
         onError: (error: AxiosError<LoginErrorResponse>) => {
