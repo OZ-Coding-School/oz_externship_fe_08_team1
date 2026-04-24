@@ -1,26 +1,55 @@
 /**
  * @figma 마이페이지  https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-5063&m=dev
  */
+import { Suspense } from 'react'
 import { useNavigate } from 'react-router'
-import { Card, Button, Avatar } from '@/components'
+import { Card, Button, Avatar, Spinner } from '@/components'
+import { MypageErrorBoundary } from '@/components/mypage'
 import { ROUTES } from '@/constants/routes'
+import { GENDER_LABEL } from '@/constants/genderLabel'
+import { formatPhone } from '@/utils/formatPhone'
 import { useMe } from '@/features/accounts/me'
 import { useMeEnrolledCourses } from '@/features/accounts/me-enrolled-courses'
 
-const GENDER_LABEL: Record<string, string> = { M: '남자', F: '여자' }
-
-function formatPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, '')
-  const match = digits.match(/^(\d{3})(\d{3,4})(\d{4})$/)
-  return match ? `${match[1]} - ${match[2]} - ${match[3]}` : phone
+interface InfoRowProps {
+  label: string
+  value: string
 }
 
-export function MypagePage() {
+function InfoRow({ label, value }: InfoRowProps) {
+  return (
+    <div className="flex items-center">
+      <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
+        {label}
+      </span>
+      <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
+        {value}
+      </p>
+    </div>
+  )
+}
+
+function MypageContent() {
   const navigate = useNavigate()
   const { data: me } = useMe()
   const { data: enrolledCourses } = useMeEnrolledCourses()
 
-  const firstCourse = enrolledCourses[0]
+  const firstCourse = enrolledCourses?.[0]
+
+  const profileRows: InfoRowProps[] = [
+    { label: '닉네임', value: me.nickname },
+    { label: '이메일', value: me.email },
+  ]
+
+  const personalRows: InfoRowProps[] = [
+    { label: '이름', value: me.name },
+    {
+      label: '휴대전화',
+      value: me.phone_number ? formatPhone(me.phone_number) : '-',
+    },
+    { label: '성별', value: GENDER_LABEL[me.gender] ?? me.gender },
+    { label: '생년월일', value: me.birthday?.replace(/-/g, '.') ?? '-' },
+  ]
 
   return (
     <div className="space-y-6">
@@ -58,23 +87,9 @@ export function MypagePage() {
 
           {/* 프로필 정보 */}
           <div className="space-y-5">
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                닉네임
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {me.nickname}
-              </p>
-            </div>
-
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                이메일
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {me.email}
-              </p>
-            </div>
+            {profileRows.map(({ label, value }) => (
+              <InfoRow key={label} label={label} value={value} />
+            ))}
           </div>
         </section>
 
@@ -85,41 +100,9 @@ export function MypagePage() {
           </h2>
 
           <div className="space-y-5">
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                이름
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {me.name}
-              </p>
-            </div>
-
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                휴대전화
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {formatPhone(me.phone_number)}
-              </p>
-            </div>
-
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                성별
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {GENDER_LABEL[me.gender] ?? me.gender}
-              </p>
-            </div>
-
-            <div className="flex items-center">
-              <span className="w-32 text-sm leading-[140%] font-medium tracking-[-0.03em] text-gray-700">
-                생년월일
-              </span>
-              <p className="flex-1 text-base leading-[140%] font-normal tracking-[-0.03em] text-gray-900">
-                {me.birthday.replace(/-/g, '.')}
-              </p>
-            </div>
+            {personalRows.map(({ label, value }) => (
+              <InfoRow key={label} label={label} value={value} />
+            ))}
           </div>
         </section>
       </Card>
@@ -146,6 +129,8 @@ export function MypagePage() {
                 <img
                   src={firstCourse.course.thumbnail_img_url}
                   alt={firstCourse.course.name}
+                  width={163}
+                  height={163}
                   className="h-full w-full rounded object-cover"
                 />
               ) : (
@@ -200,5 +185,21 @@ export function MypagePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export function MypagePage() {
+  return (
+    <MypageErrorBoundary>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-20">
+            <Spinner size="lg" />
+          </div>
+        }
+      >
+        <MypageContent />
+      </Suspense>
+    </MypageErrorBoundary>
   )
 }

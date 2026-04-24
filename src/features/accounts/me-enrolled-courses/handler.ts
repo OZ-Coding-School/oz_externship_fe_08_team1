@@ -18,7 +18,7 @@ export const meEnrolledCoursesHandlers = [
           id: 1,
           name: 'IT스타트업 실무형 풀스택 웹 개발 부트캠프 (React + Node.js)',
           tag: 'fullstack',
-          thumbnail_img_url: '',
+          thumbnail_img_url: 'https://placehold.co/163x163',
         },
       },
     ])

@@ -15,6 +15,7 @@ export function SidebarTab({
     <NavLink
       to={to}
       end
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
       className={({ isActive }) =>
         [
           'relative flex h-8 w-[152px] items-center rounded-sm px-5 text-lg leading-normal tracking-[-0.03em] transition-colors duration-150',

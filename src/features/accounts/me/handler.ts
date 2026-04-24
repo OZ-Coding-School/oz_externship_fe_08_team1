@@ -8,7 +8,7 @@ export const meHandlers = [
     return HttpResponse.json<MeResponse>({
       id: 1,
       email: 'ozschool1234@gmail.com',
-      nickname: '김도국',
+      nickname: '오즈오즈',
       name: '김오즈',
       phone_number: '01012341234',
       birthday: '2000-12-25',
