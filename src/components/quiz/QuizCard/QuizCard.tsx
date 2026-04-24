@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/common/Button'
 import { ROUTES } from '@/constants/routes'
+import { QuizCodeModal } from '@/components/quiz/QuizCodeModal'
 import type { DeploymentListItem } from '@/features/exams/deployments'
 
 interface QuizCardProps {
@@ -24,7 +26,9 @@ function StatusBadge({ isDone }: { isDone: boolean }) {
 
 export function QuizCard({ item }: QuizCardProps) {
   const navigate = useNavigate()
-  const { id, exam, exam_info, question_count, total_score } = item
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { id, exam, exam_info, question_count, total_score, duration_time } =
+    item
   const isDone = exam_info.status === 'done'
 
   const subtitle = isDone
@@ -63,15 +67,25 @@ export function QuizCard({ item }: QuizCardProps) {
         size="md"
         className="w-[112px]"
         onClick={() =>
-          navigate(
-            isDone
-              ? ROUTES.QUIZ.RESULT.replace(':quizId', String(id))
-              : ROUTES.QUIZ.EXAM.replace(':quizId', String(id))
-          )
+          isDone
+            ? navigate(ROUTES.QUIZ.RESULT.replace(':quizId', String(id)))
+            : setIsModalOpen(true)
         }
       >
         {isDone ? '상세보기' : '응시하기'}
       </Button>
+
+      {!isDone && (
+        <QuizCodeModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          deploymentId={id}
+          examTitle={exam.title}
+          thumbnailUrl={exam.thumbnail_img_url}
+          questionCount={question_count}
+          durationTime={duration_time}
+        />
+      )}
     </div>
   )
 }
