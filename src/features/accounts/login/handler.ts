@@ -1,7 +1,9 @@
 import { http, HttpResponse } from 'msw'
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
+
 export const loginHandlers = [
-  http.post('/api/v1/accounts/login', async ({ request }) => {
+  http.post(`${BASE_URL}/accounts/login`, async ({ request }) => {
     const body = (await request.json()) as { email: string; password: string }
 
     if (body.email === 'withdrawn@test.com') {
