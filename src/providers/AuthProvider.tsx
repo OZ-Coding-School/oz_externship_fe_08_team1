@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .catch(() => {
         localStorage.removeItem('accessToken')
       })
-  }, [])
+  }, [queryClient, setAuth])
 
   return <>{children}</>
 }
