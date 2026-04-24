@@ -52,10 +52,10 @@ function MypageContent() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* 헤더 - 카드 밖 */}
       <div className="flex items-center justify-between">
-        <h1 className="text-text-heading text-[32px] leading-[140%] font-bold tracking-[-0.03em]">
+        <h1 className="text-text-heading self-start text-[32px] leading-[140%] font-bold tracking-[-0.03em]">
           내 정보
         </h1>
         <Button
