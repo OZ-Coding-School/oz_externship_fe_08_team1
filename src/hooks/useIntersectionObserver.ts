@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 interface UseIntersectionObserverOptions {
   onIntersect: () => void
@@ -10,6 +10,10 @@ export function useIntersectionObserver({
   enabled = true,
 }: UseIntersectionObserverOptions) {
   const ref = useRef<HTMLDivElement>(null)
+  const onIntersectRef = useRef(onIntersect)
+  useLayoutEffect(() => {
+    onIntersectRef.current = onIntersect
+  })
 
   useEffect(() => {
     if (!enabled || !ref.current) return
@@ -17,7 +21,7 @@ export function useIntersectionObserver({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          onIntersect()
+          onIntersectRef.current()
         }
       },
       { threshold: 0.1 }
@@ -25,7 +29,7 @@ export function useIntersectionObserver({
 
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [enabled, onIntersect])
+  }, [enabled])
 
   return ref
 }
