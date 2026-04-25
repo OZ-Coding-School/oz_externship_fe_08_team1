@@ -1,3 +1,4 @@
+export { ExamThumbnail } from './ExamThumbnail'
 export { QuizCard } from './QuizCard'
 export { QuizCardSkeleton } from './QuizCardSkeleton'
 export { QuizList } from './QuizList'

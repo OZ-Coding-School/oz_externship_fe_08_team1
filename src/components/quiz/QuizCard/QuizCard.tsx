@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/common/Button'
 import { ROUTES } from '@/constants/routes'
+import { ExamThumbnail } from '@/components/quiz/ExamThumbnail'
 import { QuizCodeModal } from '@/components/quiz/QuizCodeModal'
 import type { DeploymentListItem } from '@/features/exams/deployments'
 
@@ -82,16 +83,7 @@ export function QuizCard({ item }: QuizCardProps) {
     <div className="border-disable flex h-[104px] w-full items-center justify-between rounded-lg border bg-gray-100 px-8 py-7">
       {/* 좌측: 아이콘 + 시험 정보 */}
       <div className="flex items-center gap-4">
-        <div className="bg-primary-100 flex h-12 w-12 shrink-0 items-center justify-center p-2.5">
-          <img
-            src={exam.thumbnail_img_url}
-            alt={exam.title}
-            width={28}
-            height={28}
-            loading="lazy"
-            className="h-full w-full object-contain"
-          />
-        </div>
+        <ExamThumbnail src={exam.thumbnail_img_url} alt={exam.title} />
         <div className="flex flex-col justify-center gap-1">
           <div className="flex items-center gap-3">
             <span className="text-lg leading-[140%] font-semibold tracking-[-0.03em] text-black">

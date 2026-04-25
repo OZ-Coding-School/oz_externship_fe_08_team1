@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Modal } from '@/components/common/Modal'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
+import { ExamThumbnail } from '@/components/quiz/ExamThumbnail'
 import { ROUTES } from '@/constants/routes'
 import { HTTP_STATUS } from '@/constants/httpStatus'
 import { useCheckCode } from '@/features/exams/deployment-check-code'
@@ -94,16 +95,7 @@ export function QuizCodeModal({
     <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-sm">
       {/* 시험 정보 */}
       <div className="mb-8 flex flex-col items-center gap-3">
-        <div className="bg-primary-100 flex h-12 w-12 shrink-0 items-center justify-center p-2.5">
-          <img
-            src={thumbnailUrl}
-            alt={examTitle}
-            width={28}
-            height={28}
-            loading="lazy"
-            className="h-full w-full object-contain"
-          />
-        </div>
+        <ExamThumbnail src={thumbnailUrl} alt={examTitle} />
         <div className="flex flex-col items-center gap-1">
           <span className="text-text-heading text-lg leading-[140%] font-semibold tracking-[-0.03em]">
             {examTitle}
