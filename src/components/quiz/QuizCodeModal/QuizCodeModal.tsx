@@ -94,7 +94,7 @@ export function QuizCodeModal({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-sm">
       {/* 시험 정보 */}
-      <div className="mb-8 flex flex-col items-center gap-3">
+      <div className="mb-8 flex flex-col items-center gap-4">
         <ExamThumbnail src={thumbnailUrl} alt={examTitle} />
         <div className="flex flex-col items-center gap-1">
           <span className="text-text-heading text-lg leading-[140%] font-semibold tracking-[-0.03em]">
@@ -108,7 +108,7 @@ export function QuizCodeModal({
       </div>
 
       {/* 참가코드 입력 */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <Input
           label="참가 코드입력"
           placeholder="6자리를 입력해주세요"

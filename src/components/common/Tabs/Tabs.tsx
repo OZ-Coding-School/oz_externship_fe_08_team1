@@ -95,7 +95,7 @@ export function Tab({ value, children, disabled = false }: TabProps) {
         if (e.key === 'Enter' || e.key === ' ') onChange(value)
       }}
       className={[
-        'relative shrink-0 px-4 py-3 text-sm font-medium transition-colors duration-150 outline-none',
+        'relative shrink-0 px-4 py-3 text-xl font-bold tracking-[-0.03em] transition-colors duration-150 outline-none',
         'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-inset',
         isActive
           ? 'text-primary after:bg-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-t-full'

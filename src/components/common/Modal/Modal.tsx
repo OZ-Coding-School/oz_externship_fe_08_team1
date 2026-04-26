@@ -68,7 +68,7 @@ export function Modal({
     >
       <div
         className={[
-          'bg-bg-base relative flex w-full flex-col rounded-2xl shadow-xl',
+          'bg-bg-base relative flex w-full flex-col rounded-xl shadow-xl',
           maxWidth,
         ].join(' ')}
       >
