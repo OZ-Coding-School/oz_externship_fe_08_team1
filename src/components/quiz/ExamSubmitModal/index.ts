@@ -1,0 +1,1 @@
+export { ExamSubmitModal } from './ExamSubmitModal'
