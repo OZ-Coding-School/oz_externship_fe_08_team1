@@ -6,6 +6,7 @@ export interface ProfileDropdownProps {
   onClose: () => void
   nickname: string
   email: string
+  isEnrolled?: boolean
   onEnroll?: () => void
   onMypage?: () => void
   onLogout?: () => void
@@ -16,6 +17,7 @@ export function ProfileDropdown({
   onClose,
   nickname,
   email,
+  isEnrolled = false,
   onEnroll,
   onMypage,
   onLogout,
@@ -24,13 +26,20 @@ export function ProfileDropdown({
 
   useEffect(() => {
     if (!isOpen) return
-    const handler = (e: MouseEvent) => {
+    const handleMouseDown = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
         onClose()
       }
     }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [isOpen, onClose])
 
   if (!isOpen) return null
@@ -38,6 +47,8 @@ export function ProfileDropdown({
   return (
     <div
       ref={ref}
+      role="menu"
+      aria-label="프로필 메뉴"
       className="absolute top-full right-0 z-50 mt-2 w-[204px] rounded-xl bg-white px-4 py-6 shadow-[0px_0px_16px_0px_rgba(160,160,160,0.25)]"
     >
       <div className="flex flex-col gap-2">
@@ -56,19 +67,23 @@ export function ProfileDropdown({
 
         {/* Menu */}
         <nav className="flex flex-col gap-1">
+          {!isEnrolled && (
+            <Button
+              variant="ghost"
+              size="sm"
+              fullWidth
+              role="menuitem"
+              onClick={onEnroll}
+              className="text-text-heading hover:text-primary h-12 justify-start"
+            >
+              수강생 등록
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="sm"
             fullWidth
-            onClick={onEnroll}
-            className="text-text-heading hover:text-primary h-12 justify-start"
-          >
-            수강생 등록
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            fullWidth
+            role="menuitem"
             onClick={onMypage}
             className="text-text-heading hover:text-primary h-12 justify-start tracking-tight"
           >
@@ -78,6 +93,7 @@ export function ProfileDropdown({
             variant="ghost"
             size="sm"
             fullWidth
+            role="menuitem"
             onClick={onLogout}
             className="text-text-heading hover:text-primary h-12 justify-start tracking-tight"
           >
@@ -88,5 +104,3 @@ export function ProfileDropdown({
     </div>
   )
 }
-
-export default ProfileDropdown
