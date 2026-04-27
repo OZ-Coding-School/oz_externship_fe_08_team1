@@ -6,6 +6,8 @@ import { meEnrolledCoursesHandlers } from '@/features/accounts/me-enrolled-cours
 import { checkCodeHandlers } from '@/features/exams/deployment-check-code'
 import { checkNicknameHandlers } from '@/features/accounts/check-nickname'
 import { meProfileImageHandlers } from '@/features/accounts/me-profile-image'
+import { deploymentDetailHandlers } from '@/features/exams/deployment-detail'
+import { submissionsHandlers } from '@/features/exams/submissions'
 
 export const handlers = [
   http.get('/api/health', () => {
@@ -15,7 +17,10 @@ export const handlers = [
   ...meEnrolledCoursesHandlers,
   ...deploymentsHandlers,
   ...loginHandlers,
+  // check-code는 deploymentDetail보다 먼저 등록해 패스 우선순위 확보
   ...checkCodeHandlers,
   ...checkNicknameHandlers,
   ...meProfileImageHandlers,
+  ...deploymentDetailHandlers,
+  ...submissionsHandlers,
 ]
