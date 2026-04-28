@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import axios from 'axios'
 import { Modal } from '@/components/common/Modal'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
@@ -9,7 +8,8 @@ import { ROUTES } from '@/constants/routes'
 import { HTTP_STATUS } from '@/constants/httpStatus'
 import { useCheckCode } from '@/features/exams/deployment-check-code'
 import { useToastStore } from '@/stores/toastStore'
-import type { CheckCodeErrorResponse } from '@/features/exams/deployment-check-code'
+import { getErrorDetail } from '@/utils/getErrorDetail'
+import { getErrorStatus } from '@/utils/getErrorStatus'
 
 const BASE62_REGEX = /^[0-9a-zA-Z]{6}$/
 
@@ -72,10 +72,8 @@ export function QuizCodeModal({
           })
         },
         onError: (error) => {
-          if (!axios.isAxiosError<CheckCodeErrorResponse>(error)) return
-
-          const status = error.response?.status
-          const errorDetail = error.response?.data?.error_detail
+          const status = getErrorStatus(error)
+          const errorDetail = getErrorDetail(error)
 
           if (status === HTTP_STATUS.BAD_REQUEST) {
             setInputError(errorDetail ?? '응시 코드가 일치하지 않습니다.')
