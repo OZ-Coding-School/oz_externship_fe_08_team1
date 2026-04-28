@@ -48,7 +48,11 @@ export function Header({
                 className="flex shrink-0 items-center"
                 aria-label="홈으로 이동"
               >
-                <img src={logoImg} alt="OzCodingSchool" className="h-5 w-auto" />
+                <img
+                  src={logoImg}
+                  alt="OzCodingSchool"
+                  className="h-5 w-auto"
+                />
               </button>
 
               <nav className="flex items-center gap-15">
@@ -69,9 +73,12 @@ export function Header({
 
             {/* Right: Auth or Profile */}
             {isAuthenticated && user ? (
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => setDropdownOpen(true)}
+                onMouseLeave={() => setDropdownOpen(false)}
+              >
                 <button
-                  onMouseEnter={() => setDropdownOpen(true)}
                   onClick={() => setDropdownOpen((v) => !v)}
                   aria-label="프로필 메뉴"
                   aria-expanded={dropdownOpen}
