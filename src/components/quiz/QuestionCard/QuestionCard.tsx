@@ -71,7 +71,6 @@ export function QuestionCard({
         return (
           <FillBlankQuestion
             prompt={question.prompt ?? ''}
-            blankCount={question.blank_count ?? 0}
             answer={answer}
             onChange={onChange}
           />

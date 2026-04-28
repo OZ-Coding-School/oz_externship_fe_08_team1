@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { indexToLetter } from '@/utils/indexToLetter'
 import {
   DndContext,
   DragOverlay,
@@ -166,7 +167,7 @@ export function OrderingQuestion({
 
   const getLetter = (item: string) => {
     const idx = options.indexOf(item)
-    return idx >= 0 ? String.fromCharCode(65 + idx) : '?'
+    return idx >= 0 ? indexToLetter(idx) : '?'
   }
 
   const handleDragStart = ({ active }: DragStartEvent) => {
@@ -217,7 +218,7 @@ export function OrderingQuestion({
               <SourceItem
                 key={item}
                 item={item}
-                label={String.fromCharCode(65 + i)}
+                label={indexToLetter(i)}
                 isPlaced={placed.has(item)}
               />
             ))}

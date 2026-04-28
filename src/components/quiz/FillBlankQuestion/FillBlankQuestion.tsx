@@ -1,6 +1,7 @@
+import { indexToLetter } from '@/utils/indexToLetter'
+
 interface FillBlankQuestionProps {
   prompt: string
-  blankCount: number
   answer: string[]
   onChange: (answer: string[]) => void
 }
@@ -28,7 +29,7 @@ export function FillBlankQuestion({
               {segment}
               {i < segments.length - 1 && (
                 <strong className="font-bold">
-                  ({String.fromCharCode(65 + i)}) ________
+                  ({indexToLetter(i)}) ________
                 </strong>
               )}
             </span>
@@ -44,14 +45,14 @@ export function FillBlankQuestion({
             className="bg-bg-muted flex h-12 max-w-[308px] items-center gap-2 rounded px-4 py-[10px]"
           >
             <span className="shrink-0 text-base leading-normal font-semibold tracking-[-0.03em] text-gray-800">
-              {String.fromCharCode(65 + i)}
+              {indexToLetter(i)}
             </span>
             <input
               type="text"
               value={val}
               onChange={(e) => handleChange(i, e.target.value)}
               placeholder="정답을 입력해 주세요."
-              aria-label={`빈칸 ${String.fromCharCode(65 + i)}`}
+              aria-label={`빈칸 ${indexToLetter(i)}`}
               className="placeholder:text-gray-350 flex-1 bg-transparent text-base leading-normal tracking-[-0.03em] text-gray-800 outline-none"
             />
           </div>
