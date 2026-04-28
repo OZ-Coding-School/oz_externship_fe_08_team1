@@ -10,20 +10,33 @@ interface User {
 
 interface AuthState {
   isAuthenticated: boolean
+  isLoading: boolean
   user: User | null
   login: (user: User) => void
   logout: () => void
+  setLoading: (loading: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>()(
   devtools(
     (set) => ({
       isAuthenticated: !!localStorage.getItem('accessToken'),
+      isLoading: !!localStorage.getItem('accessToken'),
       user: null,
       login: (user) =>
-        set({ isAuthenticated: true, user }, undefined, 'auth/login'),
+        set(
+          { isAuthenticated: true, isLoading: false, user },
+          undefined,
+          'auth/login'
+        ),
       logout: () =>
-        set({ isAuthenticated: false, user: null }, undefined, 'auth/logout'),
+        set(
+          { isAuthenticated: false, isLoading: false, user: null },
+          undefined,
+          'auth/logout'
+        ),
+      setLoading: (loading) =>
+        set({ isLoading: loading }, undefined, 'auth/setLoading'),
     }),
     { name: 'AuthStore' }
   )

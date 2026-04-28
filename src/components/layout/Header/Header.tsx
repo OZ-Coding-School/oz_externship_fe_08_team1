@@ -5,19 +5,19 @@ import { ROUTES } from '@/constants/routes'
 import { ProfileIcon } from './icons'
 import { ProfileDropdown } from './ProfileDropdown'
 import { useAuthStore } from '@/stores/authStore'
+import { useLogout } from '@/features/accounts/logout/queries'
 
 export interface HeaderProps {
   bannerText?: string
-  onLogout?: () => void
 }
 
 export function Header({
   bannerText = '🚨 선착순 모집! 국비지원 받고 4주 완성',
-  onLogout,
 }: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const navigate = useNavigate()
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated, user, logout } = useAuthStore()
+  const { mutate: logoutApi } = useLogout()
 
   return (
     <header className="flex w-full flex-col">
@@ -40,7 +40,6 @@ export function Header({
             </button>
 
             <nav className="flex items-center gap-15">
-              {/* TODO: 커뮤니티, 질의응답 페이지 추가되면 외부 링크 연결하기 */}
               <button
                 onClick={() => navigate(ROUTES.COMMUNITY.LIST)}
                 className="hover:text-primary px-2.5 py-2.5 text-lg tracking-tight text-gray-900 transition-colors duration-150"
@@ -91,8 +90,13 @@ export function Header({
                   setDropdownOpen(false)
                 }}
                 onLogout={() => {
-                  onLogout?.()
-                  setDropdownOpen(false)
+                  logoutApi(undefined, {
+                    onSuccess: () => {
+                      logout()
+                      localStorage.removeItem('accessToken')
+                      setDropdownOpen(false)
+                    },
+                  })
                 }}
               />
             </div>

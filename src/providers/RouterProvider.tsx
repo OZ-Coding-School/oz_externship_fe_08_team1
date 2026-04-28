@@ -7,11 +7,11 @@ import { SignupSelectPage, SignupPage } from '@/pages/signup'
 import { MypagePage, MypageEditPage, ChangePasswordPage } from '@/pages/mypage'
 import { QuizListPage, QuizExamPage, QuizResultPage } from '@/pages/quiz'
 import { ComponentShowcase } from '@/pages/ComponentShowcase'
+import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 
 export function RouterProvider() {
   return (
     <Routes>
-      {/* Header only (no Footer) */}
       <Route element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
         <Route path="signup">
@@ -23,11 +23,17 @@ export function RouterProvider() {
       {/* 시험 응시 — 헤더/푸터 없이 전체화면 전용 레이아웃 */}
       <Route path="quiz/:quizId/exam" element={<QuizExamPage />} />
 
-      {/* Header + Footer */}
       <Route element={<DefaultLayout />}>
         <Route index element={<HomePage />} />
 
-        <Route path="mypage" element={<MypageLayout />}>
+        <Route
+          path="mypage"
+          element={
+            <ProtectedRoute>
+              <MypageLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<MypagePage />} />
           <Route path="edit" element={<MypageEditPage />} />
           <Route path="change-password" element={<ChangePasswordPage />} />
@@ -35,7 +41,14 @@ export function RouterProvider() {
         </Route>
 
         <Route path="quiz/:quizId">
-          <Route path="result" element={<QuizResultPage />} />
+          <Route
+            path="result"
+            element={
+              <ProtectedRoute>
+                <QuizResultPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
 
         <Route path="showcase" element={<ComponentShowcase />} />

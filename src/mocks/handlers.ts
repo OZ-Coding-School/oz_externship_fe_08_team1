@@ -8,6 +8,7 @@ import { checkNicknameHandlers } from '@/features/accounts/check-nickname'
 import { meProfileImageHandlers } from '@/features/accounts/me-profile-image'
 import { deploymentDetailHandlers } from '@/features/exams/deployment-detail'
 import { submissionsHandlers } from '@/features/exams/submissions'
+import { logoutHandlers } from '@/features/accounts/logout'
 
 export const handlers = [
   http.get('/api/health', () => {
@@ -23,4 +24,5 @@ export const handlers = [
   ...meProfileImageHandlers,
   ...deploymentDetailHandlers,
   ...submissionsHandlers,
+  ...logoutHandlers,
 ]
