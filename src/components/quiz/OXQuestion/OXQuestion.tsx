@@ -55,7 +55,7 @@ export function OXQuestion({ answer, onChange }: OXQuestionProps) {
             {/* 레이블 */}
             <span
               className={[
-                'flex-1 text-base leading-normal tracking-[-0.03em]',
+                'flex-1 text-left text-base leading-normal tracking-[-0.03em]',
                 isSelected ? 'text-primary' : 'text-gray-800',
               ].join(' ')}
             >

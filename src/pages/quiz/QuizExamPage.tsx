@@ -13,6 +13,7 @@ import { useSubmitExam } from '@/features/exams/submissions'
 import { useExamTimer } from '@/hooks/useExamTimer'
 import { useCheatingDetector } from '@/hooks/useCheatingDetector'
 import { useToastStore } from '@/stores/toastStore'
+import { ROUTES } from '@/constants/routes'
 import { HTTP_STATUS } from '@/constants/httpStatus'
 import type { Question } from '@/features/exams/deployment-detail'
 import type { SubmissionAnswer } from '@/features/exams/submissions'
@@ -28,7 +29,7 @@ const ERROR_MAP: Record<number, { fallback: string; redirect?: string }> = {
   },
   [HTTP_STATUS.UNAUTHORIZED]: {
     fallback: '로그인이 필요합니다.',
-    redirect: '/auth/login',
+    redirect: ROUTES.AUTH.LOGIN,
   },
   [HTTP_STATUS.FORBIDDEN]: {
     fallback: '권한이 없습니다.',
@@ -333,11 +334,11 @@ export function QuizExamPage() {
   const deploymentId = Number(quizId)
 
   if (!quizId || Number.isNaN(deploymentId)) {
-    return <Navigate to="/mypage/quiz" replace />
+    return <Navigate to={ROUTES.MYPAGE.QUIZ} replace />
   }
 
   if (!location.state?.fromCode) {
-    return <Navigate to="/mypage/quiz" replace />
+    return <Navigate to={ROUTES.MYPAGE.QUIZ} replace />
   }
 
   return (

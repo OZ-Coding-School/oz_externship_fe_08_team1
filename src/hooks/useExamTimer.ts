@@ -33,6 +33,12 @@ export function useExamTimer({
   })
 
   useEffect(() => {
+    setRemainingSeconds(Math.max(0, initialSeconds))
+  }, [initialSeconds])
+
+  useEffect(() => {
+    expiredRef.current = false
+
     const timer = setInterval(() => {
       setRemainingSeconds((prev) => {
         const next = prev - 1
@@ -55,9 +61,10 @@ export function useExamTimer({
       clearInterval(timer)
       if (expireTimeoutRef.current !== null) {
         clearTimeout(expireTimeoutRef.current)
+        expireTimeoutRef.current = null
       }
     }
-  }, [])
+  }, [initialSeconds])
 
   return {
     remainingSeconds,
