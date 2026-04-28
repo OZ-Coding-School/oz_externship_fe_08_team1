@@ -1,13 +1,12 @@
 import { useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { meQueries } from '@/features/accounts/me/queries'
+import { meQueries } from '@/features/accounts/me'
 import { useAuthStore } from '@/stores/authStore'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient()
-  const { login: setAuth } = useAuthStore()
+  const { login: setAuth, setLoading } = useAuthStore()
 
-  //
   useEffect(() => {
     const token = localStorage.getItem('accessToken')
     if (!token) return
@@ -23,8 +22,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       .catch(() => {
         localStorage.removeItem('accessToken')
+        queryClient.clear()
+        useAuthStore.getState().logout()
       })
-  }, [queryClient, setAuth])
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [queryClient, setAuth, setLoading])
 
   return <>{children}</>
 }
