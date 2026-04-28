@@ -32,17 +32,18 @@ export function OXQuestion({ answer, onChange }: OXQuestionProps) {
           >
             {/* O / X 아이콘 — currentColor로 부모 text 색상 참조 */}
             <span
-              className={
+              className={[
+                'flex w-5 shrink-0 items-center justify-center',
                 isSelected
                   ? isO
                     ? 'text-success'
                     : 'text-error'
-                  : 'text-gray-350'
-              }
+                  : 'text-gray-350',
+              ].join(' ')}
             >
               {isO ? (
                 <Circle
-                  size={20}
+                  size={17}
                   aria-hidden="true"
                   stroke="currentColor"
                   fill="none"
