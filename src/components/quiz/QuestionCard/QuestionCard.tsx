@@ -85,23 +85,21 @@ export function QuestionCard({
   return (
     <div className="flex flex-col gap-5">
       {/* 헤더: 번호 + 문제 텍스트 + 배점/유형 뱃지 */}
-      <div className="flex items-start gap-4">
-        <div className="flex flex-1 items-start py-1">
-          <span className="w-8 shrink-0 text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
-            {question.number}.
+      <div className="flex items-baseline gap-4 py-1">
+        <span className="w-8 shrink-0 text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
+          {question.number}.
+        </span>
+        <p className="text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
+          {question.question}
+          <span className="relative -top-0.5 ml-2 inline-flex items-center gap-2 align-top">
+            <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
+              {question.point}점
+            </span>
+            <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
+              {TYPE_LABELS[question.type]}
+            </span>
           </span>
-          <p className="text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
-            {question.question}
-          </p>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
-            {question.point}점
-          </span>
-          <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
-            {TYPE_LABELS[question.type]}
-          </span>
-        </div>
+        </p>
       </div>
 
       {/* 답안 입력 — 번호(32px) 너비만큼 들여쓰기 */}
