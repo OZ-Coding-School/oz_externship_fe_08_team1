@@ -92,9 +92,10 @@ src/features/
 
 ### course/ — 과정 정보
 
-| 폴더  | API              | 메서드 |
-| ----- | ---------------- | ------ |
-| list/ | `/api/v1/course` | GET    |
+| 폴더     | API                                  | 메서드 |
+| -------- | ------------------------------------ | ------ |
+| list/    | `/api/v1/course`                     | GET    |
+| cohorts/ | `api/v1/courses/{course_id}/cohorts` | GET    |
 
 ## 각 폴더 내부 구조
 
