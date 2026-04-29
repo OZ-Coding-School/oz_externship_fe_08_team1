@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/common/Modal'
 import { Button } from '@/components/common/Button'
 import { Dropdown } from '@/components/common/Dropdown'
-import { CheckIcon } from './icons'
+import { Check } from 'lucide-react'
 import { useCourseList } from '@/features/course/list/queries'
 import { useCohortList } from '@/features/course/cohorts/queries'
 import { useEnrollStudent } from '@/features/accounts/enroll-student/queries'
@@ -99,7 +99,12 @@ export function EnrollStudentModal({
         {/* 아이콘 + 제목 + 설명 */}
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="bg-primary-300 flex h-8 w-8 items-center justify-center rounded-full">
-            <CheckIcon />
+            <Check
+              size={20}
+              strokeWidth={2.5}
+              aria-hidden="true"
+              className="text-primary"
+            />
           </div>
           <div className="flex flex-col gap-1.5">
             <h2 className="text-text-heading text-xl font-bold tracking-[-0.03em]">

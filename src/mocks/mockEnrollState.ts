@@ -1,4 +1,5 @@
 import type { MeEnrolledCoursesResponse } from '@/features/accounts/me-enrolled-courses/types'
+import { mockCourses, mockCohortsByCourse } from './mockCourseData'
 
 type CohortInfo = {
   courseId: number
@@ -7,18 +8,24 @@ type CohortInfo = {
   courseTag: string
 }
 
-const cohortLookup: Record<number, CohortInfo> = {
-  1: { courseId: 1, number: 1, courseName: '14기 백엔드', courseTag: 'BE' },
-  2: { courseId: 1, number: 2, courseName: '14기 백엔드', courseTag: 'BE' },
-  3: { courseId: 1, number: 3, courseName: '14기 백엔드', courseTag: 'BE' },
-  4: { courseId: 2, number: 1, courseName: '14기 프론트', courseTag: 'FE' },
-  5: { courseId: 2, number: 2, courseName: '14기 프론트', courseTag: 'FE' },
-  6: { courseId: 3, number: 1, courseName: '15기 백엔드', courseTag: 'BE' },
-  7: { courseId: 3, number: 2, courseName: '15기 백엔드', courseTag: 'BE' },
-  8: { courseId: 3, number: 3, courseName: '15기 백엔드', courseTag: 'BE' },
-  9: { courseId: 3, number: 4, courseName: '15기 백엔드', courseTag: 'BE' },
-  10: { courseId: 4, number: 1, courseName: '15기 프론트', courseTag: 'FE' },
-}
+const courseMap = Object.fromEntries(mockCourses.map((c) => [c.id, c]))
+
+const cohortLookup: Record<number, CohortInfo> = Object.fromEntries(
+  Object.values(mockCohortsByCourse)
+    .flat()
+    .map((cohort) => {
+      const course = courseMap[cohort.course_id]
+      return [
+        cohort.id,
+        {
+          courseId: cohort.course_id,
+          number: cohort.number,
+          courseName: course.name,
+          courseTag: course.tag,
+        },
+      ]
+    })
+)
 
 let enrolledCourses: MeEnrolledCoursesResponse = []
 
