@@ -4,7 +4,7 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Card, Button, Avatar, Input, Spinner } from '@/components'
-import { MypageErrorBoundary } from '@/components/mypage'
+import { MypageErrorBoundary, PhoneChangeModal } from '@/components/mypage'
 import { ROUTES } from '@/constants/routes'
 import { useMe, useUpdateMe } from '@/features/accounts/me'
 import { useCheckNickname } from '@/features/accounts/check-nickname'
@@ -23,7 +23,7 @@ function CameraIcon() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="20" cy="20" r="20" fill="#6C5CE7" />
+      <circle cx="20" cy="20" r="20" className="fill-primary" />
       <path
         d="M16.5 13L15 15H12C11.17 15 10.5 15.67 10.5 16.5V26.5C10.5 27.33 11.17 28 12 28H28C28.83 28 29.5 27.33 29.5 26.5V16.5C29.5 15.67 28.83 15 28 15H25L23.5 13H16.5Z"
         stroke="white"
@@ -64,6 +64,9 @@ function MypageEditContent() {
   const [nicknameStatus, setNicknameStatus] = useState<
     'idle' | 'valid' | 'invalid'
   >('idle')
+
+  // Phone change modal state
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false)
 
   // Saving state
   const [isSaving, setIsSaving] = useState(false)
@@ -190,7 +193,7 @@ function MypageEditContent() {
 
           {/* Nickname */}
           <div className="mb-5">
-            <div className="flex items-end gap-2">
+            <div className="flex items-start gap-2">
               <div className="flex-1">
                 <Input
                   label="닉네임"
@@ -223,7 +226,7 @@ function MypageEditContent() {
                 onClick={handleNicknameCheck}
                 loading={checkNickname.isPending}
                 disabled={!nickname}
-                className="mb-[22px] shrink-0"
+                className="mt-9 shrink-0"
               >
                 중복확인
               </Button>
@@ -253,7 +256,12 @@ function MypageEditContent() {
                   readOnly
                 />
               </div>
-              <Button variant="primary" size="md" className="shrink-0">
+              <Button
+                variant="primary"
+                size="md"
+                className="shrink-0"
+                onClick={() => setIsPhoneModalOpen(true)}
+              >
                 변경하기
               </Button>
             </div>
@@ -288,6 +296,11 @@ function MypageEditContent() {
           </div>
         </section>
       </Card>
+
+      <PhoneChangeModal
+        isOpen={isPhoneModalOpen}
+        onClose={() => setIsPhoneModalOpen(false)}
+      />
     </div>
   )
 }

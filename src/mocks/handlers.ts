@@ -12,6 +12,8 @@ import { logoutHandlers } from '@/features/accounts/logout'
 import { courseListHandlers } from '@/features/course/list/handler'
 import { cohortHandlers } from '@/features/course/cohorts/handler'
 import { enrollStudentHandlers } from '@/features/accounts/enroll-student/handler'
+import { verificationHandlers } from '@/features/accounts/verification'
+import { changePhoneHandlers } from '@/features/accounts/change-phone'
 
 export const handlers = [
   http.get('/api/health', () => {
@@ -31,4 +33,6 @@ export const handlers = [
   ...courseListHandlers,
   ...cohortHandlers,
   ...enrollStudentHandlers,
+  ...verificationHandlers,
+  ...changePhoneHandlers,
 ]

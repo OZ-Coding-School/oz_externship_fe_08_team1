@@ -31,7 +31,7 @@ src/features/
 | me-enrolled-courses/ | `/api/v1/accounts/me/enrolled-courses`     | GET              |
 | me-refresh/          | `/api/v1/accounts/me/refresh`              | POST             |
 | change-password/     | `/api/v1/accounts/change-password`         | PUT              |
-| change-phone/        | `/api/v1/accounts/change-phone`            | PUT              |
+| change-phone/        | `/api/v1/accounts/change-phone`            | PATCH            |
 | check-nickname/      | `/api/v1/accounts/check-nickname`          | POST             |
 | find-email/          | `/api/v1/accounts/find-email`              | POST             |
 | find-password/       | `/api/v1/accounts/find-password`           | POST             |
