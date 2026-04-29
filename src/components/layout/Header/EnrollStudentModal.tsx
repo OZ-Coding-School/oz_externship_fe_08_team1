@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/common/Modal'
 import { Button } from '@/components/common/Button'
 import { Dropdown } from '@/components/common/Dropdown'
-import { CheckIcon } from '@/components/common/Modal/icons'
+import { CheckIcon } from './icons'
 import { useCourseList } from '@/features/course/list/queries'
 import { useCohortList } from '@/features/course/cohorts/queries'
 import { useEnrollStudent } from '@/features/accounts/enroll-student/queries'
@@ -12,6 +12,12 @@ import { useToastStore } from '@/stores/toastStore'
 export interface EnrollStudentModalProps {
   isOpen: boolean
   onClose: () => void
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  const detail = (error as { response?: { data?: { error_detail?: string } } })
+    ?.response?.data?.error_detail
+  return detail ?? fallback
 }
 
 function flattenErrorDetail(
@@ -36,16 +42,19 @@ export function EnrollStudentModal({
     data: courses,
     isLoading: isCoursesLoading,
     isError: isCoursesError,
+    error: coursesError,
   } = useCourseList(isOpen)
   const {
     data: cohorts,
     isLoading: isCohortsLoading,
     isError: isCohortsError,
+    error: cohortsError,
   } = useCohortList(selectedCourseId)
   const { mutate: enrollStudent, isPending } = useEnrollStudent()
   const { show: showToast } = useToastStore()
 
   const handleClose = () => {
+    if (isPending) return
     setSelectedCourseId(null)
     setSelectedCohortId(null)
     onClose()
@@ -106,7 +115,10 @@ export function EnrollStudentModal({
         <div className="flex w-full flex-col gap-4">
           {isCoursesError ? (
             <p className="text-error text-center text-sm tracking-tight">
-              과정 목록을 불러오지 못했습니다. 다시 시도해 주세요.
+              {getErrorMessage(
+                coursesError,
+                '과정 목록을 불러오지 못했습니다. 다시 시도해 주세요.'
+              )}
             </p>
           ) : (
             <Dropdown
@@ -124,7 +136,10 @@ export function EnrollStudentModal({
 
           {isCohortsError ? (
             <p className="text-error text-center text-sm tracking-tight">
-              기수 목록을 불러오지 못했습니다. 다시 시도해 주세요.
+              {getErrorMessage(
+                cohortsError,
+                '기수 목록을 불러오지 못했습니다. 다시 시도해 주세요.'
+              )}
             </p>
           ) : (
             <Dropdown
@@ -132,11 +147,9 @@ export function EnrollStudentModal({
               value={selectedCohortId !== null ? String(selectedCohortId) : ''}
               onChange={(value) => setSelectedCohortId(Number(value))}
               placeholder={
-                selectedCourseId === null
-                  ? '기수를 선택해 주세요.'
-                  : isCohortsLoading
-                    ? '기수 불러오는 중...'
-                    : '기수를 선택해 주세요.'
+                selectedCourseId !== null && isCohortsLoading
+                  ? '기수 불러오는 중...'
+                  : '기수를 선택해 주세요.'
               }
               disabled={selectedCourseId === null || isCohortsLoading}
             />

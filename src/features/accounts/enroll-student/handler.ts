@@ -14,7 +14,13 @@ export const enrollStudentHandlers = [
       )
     }
 
-    setMockEnrolledCourse(body.cohort_id)
+    const enrolled = setMockEnrolledCourse(body.cohort_id)
+    if (!enrolled) {
+      return HttpResponse.json(
+        { error_detail: '존재하지 않는 기수입니다.' },
+        { status: 404 }
+      )
+    }
 
     return HttpResponse.json(
       { detail: '수강생 등록 신청완료.' },

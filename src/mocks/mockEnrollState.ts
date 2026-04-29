@@ -26,9 +26,9 @@ export function getMockEnrolledCourses(): MeEnrolledCoursesResponse {
   return enrolledCourses
 }
 
-export function setMockEnrolledCourse(cohortId: number): void {
+export function setMockEnrolledCourse(cohortId: number): boolean {
   const info = cohortLookup[cohortId]
-  if (!info) return
+  if (!info) return false
   enrolledCourses = [
     {
       cohort: {
@@ -46,4 +46,5 @@ export function setMockEnrolledCourse(cohortId: number): void {
       },
     },
   ]
+  return true
 }

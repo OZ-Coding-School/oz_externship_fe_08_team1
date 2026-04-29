@@ -8,7 +8,7 @@ export const courseListQueries = {
     queryOptions({
       queryKey: [...courseListQueries.all().queryKey, 'list'],
       queryFn: async () => {
-        const { data } = await api.get<CourseListResponse>('course/')
+        const { data } = await api.get<CourseListResponse>('course')
         return data
       },
     }),

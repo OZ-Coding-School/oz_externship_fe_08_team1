@@ -1,22 +1,3 @@
-export function CheckIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="text-primary"
-    >
-      <path d="M5 13L9 17L19 7" />
-    </svg>
-  )
-}
-
 export function CloseIcon() {
   return (
     <svg
