@@ -33,6 +33,7 @@ export function SocialCallbackPage() {
           })
           navigate('/', { replace: true })
         } catch {
+          localStorage.removeItem('accessToken')
           navigate('/login', { replace: true })
         }
       },
