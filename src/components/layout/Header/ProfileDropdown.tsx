@@ -49,7 +49,7 @@ export function ProfileDropdown({
       ref={ref}
       role="menu"
       aria-label="프로필 메뉴"
-      className="absolute top-full right-0 z-50 mt-2 w-[204px] rounded-xl bg-white px-4 py-6 shadow-[0px_0px_16px_0px_rgba(160,160,160,0.25)]"
+      className="absolute top-full right-0 z-50 w-[204px] rounded-xl bg-white px-4 py-6 shadow-[0px_0px_16px_0px_rgba(160,160,160,0.25)]"
     >
       <div className="flex flex-col gap-2">
         {/* User info */}

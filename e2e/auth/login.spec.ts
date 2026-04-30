@@ -34,18 +34,15 @@ test.describe('로그인 페이지 렌더링', () => {
   })
 
   test('오즈코딩스쿨 로고가 표시된다', async ({ page }) => {
-    test.skip()
     const logo = page.getByRole('img', { name: 'OzCodingSchool' })
     await expect(logo).toBeVisible()
   })
 
   test('"아직 회원이 아니신가요?" 텍스트가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByText('아직 회원이 아니신가요?')).toBeVisible()
   })
 
   test('"회원가입 하기" 링크가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(
       page.getByRole('link', { name: '회원가입 하기' })
     ).toBeVisible()
@@ -54,33 +51,28 @@ test.describe('로그인 페이지 렌더링', () => {
   test('"회원가입 하기" 링크 클릭 시 /signup으로 이동한다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('link', { name: '회원가입 하기' }).click()
     await expect(page).toHaveURL('/signup')
   })
 
   test('"카카오 간편 로그인 / 가입" 버튼이 표시된다', async ({ page }) => {
-    test.skip()
     // SocialLoginButton의 aria-label 기준: "카카오로 계속하기"
     const kakaoButton = page.getByRole('button', { name: '카카오로 계속하기' })
     await expect(kakaoButton).toBeVisible()
   })
 
   test('"네이버 간편 로그인 / 가입" 버튼이 표시된다', async ({ page }) => {
-    test.skip()
     // SocialLoginButton의 aria-label 기준: "네이버로 계속하기"
     const naverButton = page.getByRole('button', { name: '네이버로 계속하기' })
     await expect(naverButton).toBeVisible()
   })
 
   test('이메일 입력 필드가 표시된다', async ({ page }) => {
-    test.skip()
     const emailInput = page.getByPlaceholder('아이디 (example@gmail.com)')
     await expect(emailInput).toBeVisible()
   })
 
   test('비밀번호 입력 필드가 표시된다', async ({ page }) => {
-    test.skip()
     const passwordInput = page.getByPlaceholder(
       '비밀번호 (6~15자의 영문 대소문자, 숫자, 특수문자 포함)'
     )
@@ -88,7 +80,6 @@ test.describe('로그인 페이지 렌더링', () => {
   })
 
   test('"아이디 찾기" 링크가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('link', { name: '아이디 찾기' })).toBeVisible()
   })
 

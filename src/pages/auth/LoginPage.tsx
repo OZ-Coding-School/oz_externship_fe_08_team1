@@ -27,6 +27,14 @@ export function LoginPage() {
 
   const { mutate: login, isPending } = useLogin()
 
+  const handleSocialLogin = (provider: 'kakao' | 'naver') => {
+    if (import.meta.env.DEV) {
+      window.location.href = `/social-callback?provider=${provider}&is_success=true`
+    } else {
+      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}`
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -100,8 +108,14 @@ export function LoginPage() {
         </div>
 
         <div className="mt-12 flex w-full flex-col gap-3">
-          <SocialLoginButton provider="kakao" />
-          <SocialLoginButton provider="naver" />
+          <SocialLoginButton
+            provider="kakao"
+            onClick={() => handleSocialLogin('kakao')}
+          />
+          <SocialLoginButton
+            provider="naver"
+            onClick={() => handleSocialLogin('naver')}
+          />
         </div>
 
         <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">

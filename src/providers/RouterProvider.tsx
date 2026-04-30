@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router'
 import { DefaultLayout, AuthLayout } from '@/components'
 import { MypageLayout } from '@/components/mypage'
 import { HomePage } from '@/pages/home'
-import { LoginPage } from '@/pages/auth'
+import { LoginPage, SocialCallbackPage } from '@/pages/auth'
 import { SignupSelectPage, SignupPage } from '@/pages/signup'
 import { MypagePage, MypageEditPage, ChangePasswordPage } from '@/pages/mypage'
 import { QuizListPage, QuizExamPage, QuizResultPage } from '@/pages/quiz'
@@ -14,6 +14,7 @@ export function RouterProvider() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
+        <Route path="social-callback" element={<SocialCallbackPage />} />
         <Route path="signup">
           <Route index element={<SignupSelectPage />} />
           <Route path="form" element={<SignupPage />} />
