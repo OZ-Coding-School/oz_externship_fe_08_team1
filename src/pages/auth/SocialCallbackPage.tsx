@@ -31,11 +31,11 @@ export function SocialCallbackPage() {
             nickname: meData.nickname,
             profileImage: meData.profile_img_url,
           })
+          navigate('/', { replace: true })
         } catch {
-          setAuth({ email: '', nickname: '' })
+          localStorage.removeItem('accessToken')
+          navigate('/login', { replace: true })
         }
-
-        navigate('/', { replace: true })
       },
       onError: () => {
         navigate('/login', { replace: true })
@@ -49,5 +49,3 @@ export function SocialCallbackPage() {
     </div>
   )
 }
-
-export default SocialCallbackPage

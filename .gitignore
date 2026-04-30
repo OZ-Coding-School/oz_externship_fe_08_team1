@@ -30,6 +30,8 @@ dist-ssr
 *.sw?
 .claude/settings.json
 .claude/settings.local.json
+localhost-key.pem
+localhost.pem
 
 # Playwright
 playwright-report/
