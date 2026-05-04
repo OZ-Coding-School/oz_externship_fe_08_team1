@@ -87,6 +87,8 @@ export const deploymentDetailHandlers = [
     const url = new URL(request.url)
     // check-code 서브패스는 별도 핸들러에서 처리
     if (url.pathname.endsWith('check-code')) return
+    // status 서브패스는 별도 핸들러에서 처리
+    if (url.pathname.endsWith('status')) return
     return HttpResponse.json<DeploymentDetailResponse>(mockDetail)
   }),
 ]
