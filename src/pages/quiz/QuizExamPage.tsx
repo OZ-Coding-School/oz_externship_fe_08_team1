@@ -72,28 +72,7 @@ function ExamContent({ deploymentId }: ExamContentProps) {
 
   const isExamActive = !isSubmitted && !isAdminClosed
 
-  useExamStatusPoller({
-    deploymentId,
-    enabled: isExamActive,
-    onClosed: () => {
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
-      setIsAdminClosed(true)
-    },
-    onError: (status, error) => {
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
-      if (status === HTTP_STATUS.UNAUTHORIZED) {
-        navigate(ROUTES.AUTH.LOGIN, { replace: true })
-      } else {
-        const config = status ? ERROR_MAP[status] : undefined
-        const message =
-          getErrorDetail(error) ??
-          config?.fallback ??
-          '시험 상태 확인 중 오류가 발생했습니다.'
-        showToast(message, 'error')
-        navigate(ROUTES.MYPAGE.QUIZ, { replace: true })
-      }
-    },
-  })
+  useExamStatusPoller(deploymentId, isExamActive, setIsAdminClosed)
 
   // 사용자 제스처(버튼 클릭) 이후 fullscreen 진입 및 시험 시작 상태
   const startedAt = useRef(new Date().toISOString().slice(0, 19))
