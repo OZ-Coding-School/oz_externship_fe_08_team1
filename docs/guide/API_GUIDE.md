@@ -123,3 +123,20 @@ sms_token: 'str'
 }
 }
 }
+'POST api/v1/accounts/change-password': {
+request: {
+old_password: {
+type: 'str',
+required: 'true',
+},
+new_password: {
+type: 'str',
+required: 'true',
+},
+}
+response: {
+200: {
+detail: 'str'
+}
+}
+}

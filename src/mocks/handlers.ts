@@ -14,6 +14,7 @@ import { cohortHandlers } from '@/features/course/cohorts/handler'
 import { enrollStudentHandlers } from '@/features/accounts/enroll-student/handler'
 import { verificationHandlers } from '@/features/accounts/verification'
 import { changePhoneHandlers } from '@/features/accounts/change-phone'
+import { changePasswordHandlers } from '@/features/accounts/change-password'
 import { socialLoginHandlers } from '@/features/accounts/social-login'
 
 export const handlers = [
@@ -37,4 +38,5 @@ export const handlers = [
   ...verificationHandlers,
   ...changePhoneHandlers,
   ...socialLoginHandlers,
+  ...changePasswordHandlers,
 ]
