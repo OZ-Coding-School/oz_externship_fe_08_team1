@@ -3,7 +3,6 @@ import type {
   InternalAxiosRequestConfig,
   AxiosError,
 } from 'axios'
-import { ROUTES } from '@/constants/routes'
 import { useAuthStore } from '@/stores/authStore'
 
 interface RetryConfig extends InternalAxiosRequestConfig {
@@ -27,13 +26,6 @@ const processQueue = (error: unknown, token: string | null) => {
   pendingQueue = []
 }
 
-const redirectToLogin = () => {
-  useAuthStore.getState().logout()
-
-  if (window.location.pathname !== ROUTES.AUTH.LOGIN) {
-    window.location.href = ROUTES.AUTH.LOGIN
-  }
-}
 
 export function setupInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(
@@ -57,7 +49,6 @@ export function setupInterceptors(instance: AxiosInstance): void {
       }
 
       if (originalConfig.url === REFRESH_URL) {
-        redirectToLogin()
         return Promise.reject(error)
       }
 
@@ -92,7 +83,7 @@ export function setupInterceptors(instance: AxiosInstance): void {
           return instance(originalConfig)
         } catch (refreshError) {
           processQueue(refreshError, null)
-          redirectToLogin()
+          useAuthStore.getState().logout()
           return Promise.reject(refreshError)
         } finally {
           isRefreshing = false
