@@ -10,7 +10,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     instance
-      .post('/accounts/me/refresh')
+      .post('/accounts/me/refresh', {}, { withCredentials: true })
       .then(({ data }) => {
         setAccessToken(data.access_token)
         return queryClient.fetchQuery(meQueries.detail())
