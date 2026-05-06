@@ -1,4 +1,3 @@
-import axios from 'axios'
 import type {
   AxiosInstance,
   InternalAxiosRequestConfig,
@@ -13,7 +12,6 @@ interface RetryConfig extends InternalAxiosRequestConfig {
 
 const redirectToLogin = () => {
   useAuthStore.getState().logout()
-  localStorage.removeItem('accessToken')
 
   if (window.location.pathname !== ROUTES.AUTH.LOGIN) {
     window.location.href = ROUTES.AUTH.LOGIN
@@ -23,7 +21,7 @@ const redirectToLogin = () => {
 export function setupInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem('accessToken')
+      const token = useAuthStore.getState().accessToken
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -41,18 +39,24 @@ export function setupInterceptors(instance: AxiosInstance): void {
         return Promise.reject(error)
       }
 
+      // me/refresh 요청 자체가 401이면 재시도 안 함
+      if (originalConfig.url?.includes('me/refresh')) {
+        redirectToLogin()
+        return Promise.reject(error)
+      }
+
       if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true
 
         try {
-          const { data } = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/accounts/me/refresh`,
+          const { data } = await instance.post(
+            '/accounts/me/refresh',
             {},
             { withCredentials: true }
           )
 
           const newToken = data.access_token
-          localStorage.setItem('accessToken', newToken)
+          useAuthStore.getState().setAccessToken(newToken)
 
           originalConfig.headers.Authorization = `Bearer ${newToken}`
           return instance(originalConfig)

@@ -29,6 +29,7 @@ export function LoginPage() {
 
   const handleSocialLogin = (provider: 'kakao' | 'naver') => {
     if (import.meta.env.DEV) {
+      document.cookie = 'refresh_token=refresh_token; SameSite=Lax; path=/'
       window.location.href = `/social-callback?provider=${provider}&is_success=true`
     } else {
       window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}`
@@ -51,17 +52,21 @@ export function LoginPage() {
       { email, password },
       {
         onSuccess: async (data) => {
-          localStorage.setItem('accessToken', data.access_token)
+          const accessToken = data.access_token
 
           try {
+            useAuthStore.getState().setAccessToken(accessToken)
             const meData = await queryClient.fetchQuery(meQueries.detail())
-            setAuth({
-              email: meData.email,
-              nickname: meData.nickname,
-              profileImage: meData.profile_img_url,
-            })
+            setAuth(
+              {
+                email: meData.email,
+                nickname: meData.nickname,
+                profileImage: meData.profile_img_url,
+              },
+              accessToken
+            )
           } catch {
-            setAuth({ email, nickname: '' })
+            setAuth({ email, nickname: '' }, accessToken)
           }
 
           navigate('/')
