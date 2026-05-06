@@ -6,11 +6,13 @@ import { Spinner } from '@/components/common/Spinner'
 import { Modal } from '@/components/common/Modal'
 import { ExamHeader } from '@/components/quiz/exam/ExamHeader'
 import { CheatingWarningModal } from '@/components/quiz/exam/CheatingWarningModal'
+import { AdminClosedModal } from '@/components/quiz/exam/AdminClosedModal'
 import { QuestionCard } from '@/components/quiz/exam/QuestionCard'
 import { useDeploymentDetail } from '@/features/exams/deployment-detail'
 import { useSubmitExam } from '@/features/exams/submissions'
 import { useExamTimer } from '@/hooks/useExamTimer'
 import { useCheatingDetector } from '@/hooks/useCheatingDetector'
+import { useExamStatusPoller } from '@/hooks/useExamStatusPoller'
 import { useToastStore } from '@/stores/toastStore'
 import { ROUTES } from '@/constants/routes'
 import { HTTP_STATUS } from '@/constants/httpStatus'
@@ -22,7 +24,7 @@ import type { SubmissionAnswer } from '@/features/exams/submissions'
 const ERROR_MAP: Record<number, { fallback: string; redirect?: string }> = {
   [HTTP_STATUS.BAD_REQUEST]: {
     fallback: '유효하지 않은 시험 응시 세션입니다.',
-    redirect: '/mypage/quiz',
+    redirect: ROUTES.MYPAGE.QUIZ,
   },
   [HTTP_STATUS.UNAUTHORIZED]: {
     fallback: '로그인이 필요합니다.',
@@ -30,16 +32,16 @@ const ERROR_MAP: Record<number, { fallback: string; redirect?: string }> = {
   },
   [HTTP_STATUS.FORBIDDEN]: {
     fallback: '권한이 없습니다.',
-    redirect: '/mypage/quiz',
+    redirect: ROUTES.MYPAGE.QUIZ,
   },
   [HTTP_STATUS.NOT_FOUND]: {
     fallback: '해당 시험 정보를 찾을 수 없습니다.',
-    redirect: '/mypage/quiz',
+    redirect: ROUTES.MYPAGE.QUIZ,
   },
   [HTTP_STATUS.CONFLICT]: { fallback: '이미 제출된 시험입니다.' },
   [HTTP_STATUS.GONE]: {
     fallback: '시험이 종료되었습니다.',
-    redirect: '/mypage/quiz',
+    redirect: ROUTES.MYPAGE.QUIZ,
   },
 }
 
@@ -63,9 +65,15 @@ function ExamContent({ deploymentId }: ExamContentProps) {
   const [showWarningBanner, setShowWarningBanner] = useState(true)
   const [warningModalCount, setWarningModalCount] = useState(0)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isAdminClosed, setIsAdminClosed] = useState(false)
   const [submitRedirectUrl, setSubmitRedirectUrl] = useState<string | null>(
     null
   )
+
+  const isExamActive = !isSubmitted && !isAdminClosed
+
+  useExamStatusPoller(deploymentId, isExamActive, setIsAdminClosed)
+
   // 사용자 제스처(버튼 클릭) 이후 fullscreen 진입 및 시험 시작 상태
   const startedAt = useRef(new Date().toISOString().slice(0, 19))
 
@@ -143,7 +151,7 @@ function ExamContent({ deploymentId }: ExamContentProps) {
   const { cheatingCount } = useCheatingDetector({
     initialCount: cheating_count,
     onDetect: (count) => setWarningModalCount(count),
-    enabled: !isSubmitted,
+    enabled: isExamActive,
   })
 
   const handleTimerExpire = useCallback(() => {
@@ -154,6 +162,7 @@ function ExamContent({ deploymentId }: ExamContentProps) {
 
   const { remainingSeconds } = useExamTimer({
     initialSeconds: duration_time * 60 - elapsed_time,
+    enabled: isExamActive,
     onExpire: handleTimerExpire,
   })
 
@@ -179,7 +188,7 @@ function ExamContent({ deploymentId }: ExamContentProps) {
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {})
     }
-    navigate('/mypage/quiz')
+    navigate(ROUTES.MYPAGE.QUIZ)
   }, [navigate])
 
   return (
@@ -262,6 +271,12 @@ function ExamContent({ deploymentId }: ExamContentProps) {
         onClose={() => setWarningModalCount(0)}
       />
 
+      {/* 관리자 종료 모달 */}
+      <AdminClosedModal
+        isOpen={isAdminClosed}
+        onConfirm={() => navigate(ROUTES.MYPAGE.QUIZ, { replace: true })}
+      />
+
       {/* 제출 완료 모달 */}
       <Modal
         isOpen={submitRedirectUrl !== null}
@@ -309,7 +324,7 @@ export function QuizExamPage() {
   const location = useLocation()
   const deploymentId = Number(quizId)
 
-  if (!quizId || Number.isNaN(deploymentId)) {
+  if (!quizId || Number.isNaN(deploymentId) || deploymentId <= 0) {
     return <Navigate to={ROUTES.MYPAGE.QUIZ} replace />
   }
 
@@ -325,7 +340,7 @@ export function QuizExamPage() {
         </div>
       }
     >
-      <ExamContent deploymentId={deploymentId} />
+      <ExamContent key={deploymentId} deploymentId={deploymentId} />
     </Suspense>
   )
 }

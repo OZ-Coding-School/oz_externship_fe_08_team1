@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 
 interface UseExamTimerOptions {
   initialSeconds: number
+  enabled?: boolean
   onExpire: () => void
 }
 
@@ -11,6 +12,7 @@ interface UseExamTimerResult {
 
 export function useExamTimer({
   initialSeconds,
+  enabled = true,
   onExpire,
 }: UseExamTimerOptions): UseExamTimerResult {
   const [remainingSeconds, setRemainingSeconds] = useState(
@@ -30,6 +32,8 @@ export function useExamTimer({
   }, [initialSeconds])
 
   useEffect(() => {
+    if (!enabled) return
+
     expiredRef.current = false
 
     const timer = setInterval(() => {
@@ -57,7 +61,7 @@ export function useExamTimer({
         expireTimeoutRef.current = null
       }
     }
-  }, [initialSeconds])
+  }, [initialSeconds, enabled])
 
   return { remainingSeconds }
 }
