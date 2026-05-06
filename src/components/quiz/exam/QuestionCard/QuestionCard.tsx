@@ -1,0 +1,117 @@
+import { OXQuestion } from '@/components/quiz/exam/questions/OXQuestion'
+import { SingleChoiceQuestion } from '@/components/quiz/exam/questions/SingleChoiceQuestion'
+import { MultipleChoiceQuestion } from '@/components/quiz/exam/questions/MultipleChoiceQuestion'
+import { OrderingQuestion } from '@/components/quiz/exam/questions/OrderingQuestion'
+import { FillBlankQuestion } from '@/components/quiz/exam/questions/FillBlankQuestion'
+import type { Question } from '@/features/exams/deployment-detail'
+
+const TYPE_LABELS: Record<Question['type'], string> = {
+  ox: 'OX선택',
+  single_choice: '단일선택',
+  multiple_choice: '다중선택',
+  short_answer: '단답형',
+  ordering: '순서배열',
+  fill_blank: '빈칸식',
+}
+
+interface QuestionCardProps {
+  question: Question
+  answer: string | string[]
+  onChange: (answer: string | string[]) => void
+}
+
+export function QuestionCard({
+  question,
+  answer,
+  onChange,
+}: QuestionCardProps) {
+  const renderInput = () => {
+    switch (question.type) {
+      case 'ox':
+      case 'single_choice':
+      case 'short_answer': {
+        if (typeof answer !== 'string') return null
+        if (question.type === 'ox') {
+          return <OXQuestion answer={answer} onChange={onChange} />
+        }
+        if (question.type === 'single_choice') {
+          return (
+            <SingleChoiceQuestion
+              options={question.options ?? []}
+              answer={answer}
+              onChange={onChange}
+            />
+          )
+        }
+        return (
+          <div className="max-w-[648px]">
+            <input
+              type="text"
+              value={answer}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="20글자 이내로 입력해 주세요."
+              className="bg-bg-muted placeholder:text-gray-350 h-12 w-full rounded px-4 py-[10px] text-base leading-normal tracking-[-0.03em] text-gray-800 outline-none"
+            />
+          </div>
+        )
+      }
+      case 'multiple_choice':
+      case 'ordering':
+      case 'fill_blank': {
+        if (!Array.isArray(answer)) return null
+        if (question.type === 'multiple_choice') {
+          return (
+            <MultipleChoiceQuestion
+              options={question.options ?? []}
+              answer={answer}
+              onChange={onChange}
+            />
+          )
+        }
+        if (question.type === 'ordering') {
+          return (
+            <OrderingQuestion
+              options={question.options ?? []}
+              answer={answer}
+              onChange={onChange}
+            />
+          )
+        }
+        return (
+          <FillBlankQuestion
+            prompt={question.prompt ?? ''}
+            answer={answer}
+            onChange={onChange}
+          />
+        )
+      }
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      {/* 헤더: 번호 + 문제 텍스트 + 배점/유형 뱃지 */}
+      <div className="flex items-baseline gap-4 py-1">
+        <span className="w-8 shrink-0 text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
+          {question.number}.
+        </span>
+        <p className="text-xl leading-normal font-bold tracking-[-0.03em] text-gray-900">
+          {question.question}
+          <span className="relative -top-0.5 ml-2 inline-flex items-center gap-2 align-top">
+            <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
+              {question.point}점
+            </span>
+            <span className="bg-disable rounded-sm px-3 py-2 text-xs leading-normal tracking-[-0.03em] whitespace-nowrap text-gray-900">
+              {TYPE_LABELS[question.type]}
+            </span>
+          </span>
+        </p>
+      </div>
+
+      {/* 답안 입력 — 번호(32px) 너비만큼 들여쓰기 */}
+      <div className="pl-8">{renderInput()}</div>
+    </div>
+  )
+}

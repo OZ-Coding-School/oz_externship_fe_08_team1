@@ -68,7 +68,7 @@ export function Toast({
         animation: `toast-in ${ANIMATION_DURATION}ms ease-out forwards`,
       }}
       className={[
-        'fixed top-6 right-6 rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 shadow-[4px_4px_4px_0px_rgba(131,131,131,0.25)]',
+        'fixed top-6 right-6 z-60 rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 shadow-[4px_4px_4px_0px_rgba(131,131,131,0.25)]',
         className,
       ]
         .filter(Boolean)

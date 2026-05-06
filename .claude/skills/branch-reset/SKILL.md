@@ -31,7 +31,7 @@ argument-hint: [새 기능 이름 (선택)]
 
 - $ARGUMENTS에 기능 이름이 있으면 그것을 사용합니다.
 - 없으면 사용자에게 새 기능 이름을 입력받습니다.
-- `feature/<기능이름>` 형식으로 브랜치를 생성합니다: `git checkout -b feature/<기능이름>`
+- `<type>/<이슈번호>--<short-description>` 형식으로 브랜치를 생성합니다: `git checkout -b feature/<이슈번호>--<기능이름>`
 - 생성된 브랜치 정보를 출력합니다.
 
 ## 주의사항

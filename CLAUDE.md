@@ -52,6 +52,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **chromium** — 기능 E2E 테스트. `e2e/` 하위의 `*.spec.ts` (`*.visual.*` 제외)
 - **visual** — 비주얼 회귀 테스트. `e2e/visual/*.visual.spec.ts`. Figma 스크린샷을 베이스라인으로 사용하며 `e2e/__screenshots__/`에 저장. `maxDiffPixelRatio: 0.1`
 
+## PR 규칙
+
+- PR base 브랜치는 항상 **`develop`** — `main`으로 절대 보내지 말 것
+
 ## 참조 문서
 
 | 문서                                   | 용도                                  |

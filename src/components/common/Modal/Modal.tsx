@@ -59,16 +59,12 @@ export function Modal({
   return createPortal(
     <div
       ref={overlayRef}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
-      aria-describedby={description ? 'modal-desc' : undefined}
       onClick={handleOverlayClick}
       className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 p-4 backdrop-blur-sm"
     >
       <div
         className={[
-          'bg-bg-base relative flex w-full flex-col rounded-2xl shadow-xl',
+          'bg-bg-base relative flex w-full flex-col rounded-xl shadow-xl',
           maxWidth,
         ].join(' ')}
       >
@@ -77,23 +73,17 @@ export function Modal({
           <div className="flex items-start justify-between px-6 pt-6">
             <div className="flex flex-col gap-1">
               {title && (
-                <h2
-                  id="modal-title"
-                  className="text-text-heading text-xl font-semibold"
-                >
+                <h2 className="text-text-heading text-xl font-semibold">
                   {title}
                 </h2>
               )}
               {description && (
-                <p id="modal-desc" className="text-text-muted text-sm">
-                  {description}
-                </p>
+                <p className="text-text-muted text-sm">{description}</p>
               )}
             </div>
             {!hideCloseButton && (
               <button
                 onClick={onClose}
-                aria-label="모달 닫기"
                 className="text-text-muted hover:text-text-heading hover:bg-bg-muted focus-visible:ring-primary ml-4 shrink-0 rounded-lg p-1 transition-colors duration-150 outline-none focus-visible:ring-2"
               >
                 <CloseIcon />

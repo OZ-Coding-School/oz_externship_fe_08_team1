@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import { QueryProvider } from './providers/QueryProvider'
+import { ToastProvider } from './providers/ToastProvider'
+import { AuthProvider } from './providers/AuthProvider'
 import './App.css'
 import App from './App'
 
@@ -17,7 +19,11 @@ function renderApp() {
     <StrictMode>
       <BrowserRouter>
         <QueryProvider>
-          <App />
+          <AuthProvider>
+            <ToastProvider>
+              <App />
+            </ToastProvider>
+          </AuthProvider>
         </QueryProvider>
       </BrowserRouter>
     </StrictMode>

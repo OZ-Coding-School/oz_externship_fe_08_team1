@@ -3,3 +3,6 @@ export type { HeaderProps } from './Header'
 
 export { ProfileDropdown } from './ProfileDropdown'
 export type { ProfileDropdownProps } from './ProfileDropdown'
+
+export { EnrollStudentModal } from './EnrollStudentModal'
+export type { EnrollStudentModalProps } from './EnrollStudentModal'

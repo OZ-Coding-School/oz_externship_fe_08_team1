@@ -1,0 +1,1 @@
+export { MypageErrorBoundary } from './MypageErrorBoundary'

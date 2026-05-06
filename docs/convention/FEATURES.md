@@ -30,8 +30,8 @@ src/features/
 | me-profile-image/    | `/api/v1/accounts/me/profile-image`        | PUT              |
 | me-enrolled-courses/ | `/api/v1/accounts/me/enrolled-courses`     | GET              |
 | me-refresh/          | `/api/v1/accounts/me/refresh`              | POST             |
-| change-password/     | `/api/v1/accounts/change-password`         | PUT              |
-| change-phone/        | `/api/v1/accounts/change-phone`            | PUT              |
+| change-password/     | `/api/v1/accounts/change-password`         | POST             |
+| change-phone/        | `/api/v1/accounts/change-phone`            | PATCH            |
 | check-nickname/      | `/api/v1/accounts/check-nickname`          | POST             |
 | find-email/          | `/api/v1/accounts/find-email`              | POST             |
 | find-password/       | `/api/v1/accounts/find-password`           | POST             |
@@ -92,9 +92,10 @@ src/features/
 
 ### course/ — 과정 정보
 
-| 폴더  | API              | 메서드 |
-| ----- | ---------------- | ------ |
-| list/ | `/api/v1/course` | GET    |
+| 폴더     | API                                  | 메서드 |
+| -------- | ------------------------------------ | ------ |
+| list/    | `/api/v1/course`                     | GET    |
+| cohorts/ | `api/v1/courses/{course_id}/cohorts` | GET    |
 
 ## 각 폴더 내부 구조
 

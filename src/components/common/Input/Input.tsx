@@ -42,11 +42,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       : 'text-text-muted'
 
   return (
-    <div className="flex w-full flex-col gap-1.5">
+    <div className="flex w-full flex-col gap-3">
       {label && (
         <label
           htmlFor={inputId}
-          className="text-text-heading text-sm font-medium"
+          className="text-text-heading text-base font-normal"
         >
           {label}
         </label>
@@ -76,7 +76,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
                 : 'border-border-base focus:border-primary',
             disabled
               ? 'bg-bg-muted text-text-muted cursor-not-allowed opacity-60'
-              : '',
+              : props.readOnly
+                ? 'bg-bg-muted text-text-muted focus:border-border-base cursor-default'
+                : '',
             className,
           ]
             .filter(Boolean)
