@@ -14,6 +14,8 @@ export interface ModalProps {
   hideCloseButton?: boolean
   /** Override the body wrapper className (e.g. 'overflow-visible' for dropdowns) */
   bodyClassName?: string
+  /** 오버레이(바깥 영역) 클릭 시 닫기 여부 (기본값: true) */
+  closeOnOverlayClick?: boolean
 }
 
 export function Modal({
@@ -25,6 +27,7 @@ export function Modal({
   maxWidth = 'max-w-md',
   hideCloseButton = false,
   bodyClassName = 'overflow-visible',
+  closeOnOverlayClick = true,
 }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
@@ -54,7 +57,7 @@ export function Modal({
   }, [isOpen, onClose])
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === overlayRef.current) onClose()
+    if (closeOnOverlayClick && e.target === overlayRef.current) onClose()
   }
 
   if (!isOpen) return null
