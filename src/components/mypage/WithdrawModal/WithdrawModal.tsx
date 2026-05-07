@@ -58,10 +58,10 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
       {/* 탈퇴 사유 드롭다운 */}
       <div>
         <Dropdown
-          options={WITHDRAW_REASONS}
+          options={[...WITHDRAW_REASONS]}
           value={reason}
           onChange={(value) => {
-            setReason(value)
+            setReason(value as WithdrawReason)
             setError('')
             if (value === 'OTHER') {
               setReasonDetail('')
