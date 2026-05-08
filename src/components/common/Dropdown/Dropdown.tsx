@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useId } from 'react'
 import { ChevronIcon, CheckIcon } from './icons'
+import { cn } from '@/utils/cn'
 
 /* ------------------------------------------------------------------ */
 /* Types                                                                */
@@ -11,7 +12,7 @@ export interface DropdownOption {
 }
 
 export interface DropdownProps {
-  options: DropdownOption[]
+  options: readonly DropdownOption[]
   value?: string
   onChange?: (value: string) => void
   placeholder?: string
@@ -80,8 +81,7 @@ export function Dropdown({
 
   const toggle = () => {
     if (disabled) return
-    const next = !isOpen
-    setIsOpen(next)
+    setIsOpen((prev) => !prev)
     setHighlightIndex(-1)
   }
 
@@ -122,10 +122,7 @@ export function Dropdown({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={['relative w-full', className].filter(Boolean).join(' ')}
-    >
+    <div ref={containerRef} className={cn('relative w-full', className)}>
       {/* Trigger */}
       <button
         type="button"

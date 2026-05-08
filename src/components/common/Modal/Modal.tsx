@@ -71,26 +71,26 @@ export function Modal({
           maxWidth,
         ].join(' ')}
       >
+        {/* Close button */}
+        {!hideCloseButton && (
+          <button
+            onClick={onClose}
+            className="text-text-muted hover:text-text-heading hover:bg-bg-muted focus-visible:ring-primary absolute top-4 right-4 shrink-0 rounded-lg p-1 transition-colors duration-150 outline-none focus-visible:ring-2"
+          >
+            <CloseIcon />
+          </button>
+        )}
+
         {/* Header */}
-        {(title || !hideCloseButton) && (
-          <div className="flex items-start justify-between px-6 pt-6">
-            <div className="flex flex-col gap-1">
-              {title && (
-                <h2 className="text-text-heading text-xl font-semibold">
-                  {title}
-                </h2>
-              )}
-              {description && (
-                <p className="text-text-muted text-sm">{description}</p>
-              )}
-            </div>
-            {!hideCloseButton && (
-              <button
-                onClick={onClose}
-                className="text-text-muted hover:text-text-heading hover:bg-bg-muted focus-visible:ring-primary ml-4 shrink-0 rounded-lg p-1 transition-colors duration-150 outline-none focus-visible:ring-2"
-              >
-                <CloseIcon />
-              </button>
+        {(title || description) && (
+          <div className="flex flex-col gap-3 px-6 pt-14">
+            {title && (
+              <h2 className="text-text-heading text-xl font-semibold">
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p className="text-text-muted text-sm">{description}</p>
             )}
           </div>
         )}
