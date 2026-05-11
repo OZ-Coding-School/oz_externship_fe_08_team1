@@ -28,12 +28,7 @@ export function LoginPage() {
   const { mutate: login, isPending } = useLogin()
 
   const handleSocialLogin = (provider: 'kakao' | 'naver') => {
-    if (import.meta.env.DEV) {
-      document.cookie = 'refresh_token=refresh_token; SameSite=Lax; path=/'
-      window.location.href = `/social-callback?provider=${provider}&is_success=true`
-    } else {
-      window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}`
-    }
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}/`
   }
 
   const handleSubmit = (e: React.FormEvent) => {

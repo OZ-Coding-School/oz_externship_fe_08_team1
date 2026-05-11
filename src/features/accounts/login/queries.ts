@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
-import instance from '@/api/instance'
+import api from '@/api/instance'
 import type { LoginRequest, LoginResponse, LoginErrorResponse } from './types'
 import type { AxiosError } from 'axios'
 
 const loginApi = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await instance.post<LoginResponse>('/accounts/login', data)
+  const response = await api.post<LoginResponse>('/accounts/login', data)
   return response.data
 }
 

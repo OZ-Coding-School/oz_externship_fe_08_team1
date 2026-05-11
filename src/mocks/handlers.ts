@@ -1,6 +1,5 @@
 import { http, HttpResponse } from 'msw'
 import { deploymentsHandlers } from '@/features/exams/deployments'
-import { loginHandlers } from '@/features/accounts/login/handler'
 import { meHandlers } from '@/features/accounts/me'
 import { meEnrolledCoursesHandlers } from '@/features/accounts/me-enrolled-courses'
 import { checkCodeHandlers } from '@/features/exams/deployment-check-code'
@@ -16,7 +15,6 @@ import { enrollStudentHandlers } from '@/features/accounts/enroll-student/handle
 import { verificationHandlers } from '@/features/accounts/verification'
 import { changePhoneHandlers } from '@/features/accounts/change-phone'
 import { changePasswordHandlers } from '@/features/accounts/change-password'
-import { socialLoginHandlers } from '@/features/accounts/social-login'
 import { submissionDetailHandlers } from '@/features/exams/submission-detail'
 
 export const handlers = [
@@ -26,7 +24,6 @@ export const handlers = [
   ...meHandlers,
   ...meEnrolledCoursesHandlers,
   ...deploymentsHandlers,
-  ...loginHandlers,
   // status / check-code는 deploymentDetail보다 먼저 등록해 패스 우선순위 확보
   ...deploymentStatusHandlers,
   ...checkCodeHandlers,
@@ -40,7 +37,6 @@ export const handlers = [
   ...enrollStudentHandlers,
   ...verificationHandlers,
   ...changePhoneHandlers,
-  ...socialLoginHandlers,
   ...changePasswordHandlers,
   ...submissionDetailHandlers,
 ]
