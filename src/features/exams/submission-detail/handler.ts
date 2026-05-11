@@ -21,6 +21,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: ['O', 'X'],
       type: 'ox',
       answer: ['O'],
+      submitted_answer: ['O'],
       point: 10,
       explanation:
         'null == undefined는 동등 연산자(==)로 비교 시 true입니다. 단, null === undefined는 false입니다.',
@@ -34,6 +35,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: ['새로운 배열', '원본 배열', 'undefined', 'null'],
       type: 'single_choice',
       answer: ['새로운 배열'],
+      submitted_answer: ['원본 배열'],
       point: 10,
       explanation:
         'map()은 각 요소에 콜백을 적용한 결과로 구성된 새로운 배열을 반환합니다.',
@@ -48,6 +50,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: ['string', 'object', 'number', 'symbol', 'array'],
       type: 'multiple_choice',
       answer: ['string', 'number', 'symbol'],
+      submitted_answer: ['string', 'number', 'symbol'],
       point: 10,
       explanation:
         'JavaScript의 원시 타입은 string, number, bigint, boolean, undefined, symbol, null입니다. object와 array는 참조 타입입니다.',
@@ -61,6 +64,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: [],
       type: 'short_answer',
       answer: ['pending, fulfilled, rejected'],
+      submitted_answer: ['pending, fulfilled, rejected'],
       point: 10,
       explanation:
         'Promise는 pending(대기), fulfilled(이행), rejected(거부) 세 가지 상태를 가집니다.',
@@ -75,6 +79,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: [],
       type: 'fill_blank',
       answer: ['null', 'undefined'],
+      submitted_answer: ['undefined', 'null'],
       point: 10,
       explanation:
         'null은 의도적으로 값이 없음을 나타내고, undefined는 변수가 선언되었지만 값이 할당되지 않은 상태입니다.',
@@ -88,12 +93,20 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       options: ['콜백 등록', 'resolve 호출', 'Promise 생성', 'then 실행'],
       type: 'ordering',
       answer: ['Promise 생성', '콜백 등록', 'resolve 호출', 'then 실행'],
+      submitted_answer: ['Promise 생성', '콜백 등록', 'resolve 호출', 'then 실행'],
       point: 10,
       explanation:
         'Promise는 생성 → 콜백 등록 → resolve 호출 → then 실행 순서로 동작합니다.',
       is_correct: true,
     },
   ],
+  cheating_count: 1,
+  score: 40,
+  total_score: 60,
+  correct_answer_count: 4,
+  elapsed_time: 312,
+  started_at: '2026-05-11T05:00:00.000Z',
+  submitted_at: '2026-05-11T05:05:12.000Z',
 }
 
 export const submissionDetailHandlers = [
@@ -106,7 +119,7 @@ export const submissionDetailHandlers = [
     }
 
     // 404 테스트: submissionId=404 또는 NaN
-    if (submissionId === 404 || isNaN(submissionId)) {
+    if (submissionId === 404 || Number.isNaN(submissionId)) {
       return HttpResponse.json(
         { detail: '해당 시험 정보를 찾을 수 없습니다.' },
         { status: 404 }
