@@ -23,6 +23,24 @@ function RequiredLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
+const validateBirthday = (value: string) => {
+  if (!value) return '생년월일을 입력해주세요.'
+  if (!/^\d{8}$/.test(value)) return '8자리 숫자로 입력해주세요. (ex.20001204)'
+
+  const year = parseInt(value.slice(0, 4))
+  const month = parseInt(value.slice(4, 6))
+  const day = parseInt(value.slice(6, 8))
+
+  if (year < 1900 || year > new Date().getFullYear())
+    return '올바른 연도를 입력해주세요.'
+  if (month < 1 || month > 12) return '올바른 월을 입력해주세요.'
+
+  const maxDays = new Date(year, month, 0).getDate()
+  if (day < 1 || day > maxDays) return `올바른 날짜가 아닙니다.`
+
+  return ''
+}
+
 /**
  * @figma 회원가입_일반 회원가입  https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-2103&m=dev
  */
@@ -165,8 +183,9 @@ export function SignupPage() {
       setNicknameError('닉네임 중복확인을 해주세요.')
       return
     }
-    if (!birthday) {
-      setBirthdayError('생년월일을 입력해주세요.')
+    const birthdayValidation = validateBirthday(birthday)
+    if (birthdayValidation) {
+      setBirthdayError(birthdayValidation)
       return
     }
     if (!gender) {
@@ -282,7 +301,7 @@ export function SignupPage() {
               value={birthday}
               onChange={(e) => {
                 setBirthday(e.target.value)
-                setBirthdayError('')
+                setBirthdayError(validateBirthday(e.target.value))
               }}
               isError={Boolean(birthdayError)}
               errorMessage={birthdayError}
@@ -515,7 +534,12 @@ export function SignupPage() {
             type="submit"
             fullWidth
             loading={isSignupPending}
-            disabled={!emailVerified || !smsVerified || !nicknameChecked}
+            disabled={
+              !emailVerified ||
+              !smsVerified ||
+              !nicknameChecked ||
+              Boolean(birthdayError)
+            }
           >
             가입하기
           </Button>
