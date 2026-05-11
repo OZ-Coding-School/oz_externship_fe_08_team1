@@ -26,7 +26,6 @@ const processQueue = (error: unknown, token: string | null) => {
   pendingQueue = []
 }
 
-
 export function setupInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(
     (config) => {
