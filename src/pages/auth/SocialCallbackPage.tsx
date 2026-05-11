@@ -22,18 +22,22 @@ export function SocialCallbackPage() {
 
     refresh(undefined, {
       onSuccess: async (data) => {
-        localStorage.setItem('accessToken', data.access_token)
+        const accessToken = data.access_token
+        useAuthStore.getState().setAccessToken(accessToken)
 
         try {
           const meData = await queryClient.fetchQuery(meQueries.detail())
-          setAuth({
-            email: meData.email,
-            nickname: meData.nickname,
-            profileImage: meData.profile_img_url,
-          })
+          setAuth(
+            {
+              email: meData.email,
+              nickname: meData.nickname,
+              profileImage: meData.profile_img_url,
+            },
+            accessToken
+          )
           navigate('/', { replace: true })
         } catch {
-          localStorage.removeItem('accessToken')
+          useAuthStore.getState().logout()
           navigate('/login', { replace: true })
         }
       },
@@ -41,7 +45,7 @@ export function SocialCallbackPage() {
         navigate('/login', { replace: true })
       },
     })
-  }, [])
+  }, [navigate, queryClient, refresh, searchParams, setAuth])
 
   return (
     <div className="flex min-h-screen items-center justify-center">

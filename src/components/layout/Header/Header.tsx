@@ -21,7 +21,7 @@ export function Header({
   const [enrollModalOpen, setEnrollModalOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { isAuthenticated, user, logout } = useAuthStore()
+  const { isAuthenticated, isLoading, user, logout } = useAuthStore()
   const { mutate: logoutApi } = useLogout()
 
   const { data: enrolledCourses } = useQuery({
@@ -72,7 +72,9 @@ export function Header({
             </div>
 
             {/* Right: Auth or Profile */}
-            {isAuthenticated && user ? (
+            {isLoading ? (
+              <div className="h-10 w-10" />
+            ) : isAuthenticated && user ? (
               <div
                 className="relative"
                 onMouseEnter={() => setDropdownOpen(true)}
@@ -113,7 +115,6 @@ export function Header({
                     logoutApi(undefined, {
                       onSettled: () => {
                         logout()
-                        localStorage.removeItem('accessToken')
                         queryClient.clear()
                         setDropdownOpen(false)
                       },

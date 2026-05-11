@@ -120,27 +120,22 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   })
 
   test('"쪽지시험" 타이틀이 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('heading', { name: '쪽지시험' })).toBeVisible()
   })
 
   test('탭 "전체보기"가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('tab', { name: '전체보기' })).toBeVisible()
   })
 
   test('탭 "응시완료"가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('tab', { name: '응시완료' })).toBeVisible()
   })
 
   test('탭 "미응시"가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('tab', { name: '미응시' })).toBeVisible()
   })
 
   test('기본 탭은 "전체보기"가 활성 상태이다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('tab', { name: '전체보기' })).toHaveAttribute(
       'aria-selected',
       'true'
@@ -148,7 +143,6 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   })
 
   test('"응시완료" 탭 클릭 시 응시완료 목록만 표시된다', async ({ page }) => {
-    test.skip()
     await page.getByRole('tab', { name: '응시완료' }).click()
     await expect(page.getByRole('tab', { name: '응시완료' })).toHaveAttribute(
       'aria-selected',
@@ -157,7 +151,6 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   })
 
   test('"미응시" 탭 클릭 시 미응시 목록만 표시된다', async ({ page }) => {
-    test.skip()
     await page.getByRole('tab', { name: '미응시' }).click()
     await expect(page.getByRole('tab', { name: '미응시' })).toHaveAttribute(
       'aria-selected',
@@ -166,7 +159,6 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   })
 
   test('시험 카드 목록이 표시된다', async ({ page }) => {
-    test.skip()
     const cards = page.getByRole('listitem')
     await expect(cards.first()).toBeVisible()
   })
@@ -174,7 +166,6 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   test('응시 가능한 시험 카드에 "시험보기" 버튼이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     await expect(
       page.getByRole('button', { name: '시험보기' }).first()
     ).toBeVisible()
@@ -183,7 +174,6 @@ test.describe('쪽지시험 목록 렌더링 (/mypage/quiz) (REQ-QUIZ-001)', () 
   test('응시 완료된 시험 카드에 "상세보기" 버튼이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     await expect(
       page.getByRole('button', { name: '상세보기' }).first()
     ).toBeVisible()
@@ -201,13 +191,11 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   test('"시험보기" 버튼 클릭 시 참가 코드 입력 모달이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험보기' }).first().click()
     await expect(page.getByRole('dialog')).toBeVisible()
   })
 
   test('참가 코드 모달에 시험명이 표시된다', async ({ page }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험보기' }).first().click()
     await expect(page.getByRole('dialog').getByRole('heading')).toBeVisible()
   })
@@ -215,7 +203,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   test('참가 코드 모달에 총 문항 수와 제한시간이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험보기' }).first().click()
     // 예: "총 10문항 · 제한시간 20분"
     await expect(
@@ -224,7 +211,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   })
 
   test('참가 코드 입력 필드가 표시된다 (6자리)', async ({ page }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험시작' }).first().click()
     await expect(
       page.getByRole('dialog').getByPlaceholder(/6자리/)
@@ -232,7 +218,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   })
 
   test('"시험시작" 버튼이 표시된다', async ({ page }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험시작' }).first().click()
     await expect(
       page.getByRole('dialog').getByRole('button', { name: '시험시작' })
@@ -242,7 +227,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   test('올바른 참가 코드 입력 후 "시험시작" 클릭 시 응시 페이지로 이동한다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험시작' }).first().click()
     await page.getByRole('dialog').getByPlaceholder(/6자리/).fill('123456')
     await page
@@ -253,7 +237,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   })
 
   test('잘못된 참가 코드 입력 시 에러 메시지가 표시된다', async ({ page }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험시작' }).first().click()
     await page.getByRole('dialog').getByPlaceholder(/6자리/).fill('000000')
     await page
@@ -268,7 +251,6 @@ test.describe('참가 코드 입력 모달 (REQ-QUIZ-002)', () => {
   test('참가 코드 모달 닫기(X) 버튼 클릭 시 모달이 닫힌다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '시험시작' }).first().click()
     await page
       .getByRole('dialog')
@@ -291,34 +273,28 @@ test.describe('쪽지시험 응시 페이지 렌더링 (/quiz/:quizId/exam) (REQ
   })
 
   test('시험명이 헤더에 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('heading').first()).toBeVisible()
   })
 
   test('남은 시간 타이머가 표시된다', async ({ page }) => {
-    test.skip()
     // 예: "17:11 뒤에 끝나요" 형식의 타이머
     await expect(page.getByText(/\d{2}:\d{2} 뒤에 끝나요/)).toBeVisible()
   })
 
   test('경고 배너(부정행위 경고)가 상단에 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('alert')).toBeVisible()
   })
 
   test('문제 목록이 표시된다', async ({ page }) => {
-    test.skip()
     // 문제는 번호 + 지문 구조
     await expect(page.getByText(/1\./)).toBeVisible()
   })
 
   test('객관식 문제에 선택지가 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('radio').first()).toBeVisible()
   })
 
   test('하단에 "제출하기" 버튼이 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('button', { name: '제출하기' })).toBeVisible()
   })
 })
@@ -334,7 +310,6 @@ test.describe('쪽지시험 제출 (REQ-QUIZ-003)', () => {
   test('미답변 문항이 있을 때 "제출하기" 클릭 시 경고 모달이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '제출하기' }).click()
     // 부완성 경고 모달
     await expect(page.getByRole('dialog')).toBeVisible()
@@ -343,7 +318,6 @@ test.describe('쪽지시험 제출 (REQ-QUIZ-003)', () => {
   test('미답변 경고 모달에서 "확인" 클릭 시 모달이 닫히고 응시 페이지에 머문다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('button', { name: '제출하기' }).click()
     await page.getByRole('dialog').getByRole('button', { name: '확인' }).click()
     await expect(page).toHaveURL('/quiz/1/exam')
@@ -353,7 +327,6 @@ test.describe('쪽지시험 제출 (REQ-QUIZ-003)', () => {
   test('모든 문항 답변 후 "제출하기" 클릭 시 제출 완료 모달이 표시된다', async ({
     page,
   }) => {
-    test.skip()
     // 모든 문항에 답변 후 제출
     const radios = page.getByRole('radio')
     for (const radio of await radios.all()) {
@@ -370,7 +343,6 @@ test.describe('쪽지시험 제출 (REQ-QUIZ-003)', () => {
   test('제출 완료 모달에서 "확인" 클릭 시 결과 페이지로 이동한다', async ({
     page,
   }) => {
-    test.skip()
     const radios = page.getByRole('radio')
     for (const radio of await radios.all()) {
       await radio.click().catch(() => {})
@@ -383,7 +355,6 @@ test.describe('쪽지시험 제출 (REQ-QUIZ-003)', () => {
   test('이미 제출한 시험의 응시 페이지 접근 시 결과 페이지로 리다이렉트된다', async ({
     page,
   }) => {
-    test.skip()
     // MSW에서 GET /exams/deployments/1/status 가 "이미 제출" 상태를 반환하도록 오버라이드 필요
     await expect(page).toHaveURL(/\/quiz\/1\/result/)
   })
@@ -398,7 +369,6 @@ test.describe('쪽지시험 응시 중 특수 상황 모달', () => {
   })
 
   test('화면 이탈 감지 시 부정행위 경고 모달이 표시된다', async ({ page }) => {
-    test.skip()
     // visibilitychange 이벤트 트리거로 화면 이탈 감지 시뮬레이션
     await page.evaluate(() => {
       Object.defineProperty(document, 'visibilityState', {
@@ -416,7 +386,6 @@ test.describe('쪽지시험 응시 중 특수 상황 모달', () => {
   test('부정행위 경고 모달에서 "확인" 클릭 시 모달이 닫힌다', async ({
     page,
   }) => {
-    test.skip()
     await page.evaluate(() => {
       Object.defineProperty(document, 'visibilityState', {
         value: 'hidden',
@@ -429,7 +398,6 @@ test.describe('쪽지시험 응시 중 특수 상황 모달', () => {
   })
 
   test('관리자 강제 종료 시 종료 모달이 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('dialog')).toBeVisible()
     await expect(
       page.getByRole('dialog').getByText(/관리자에 의해|종료/)
@@ -439,7 +407,6 @@ test.describe('쪽지시험 응시 중 특수 상황 모달', () => {
   test('관리자 강제 종료 모달에서 "확인" 클릭 시 목록 페이지로 이동한다', async ({
     page,
   }) => {
-    test.skip()
     await page.getByRole('dialog').getByRole('button', { name: '확인' }).click()
     await expect(page).toHaveURL('/mypage/quiz')
   })
@@ -458,29 +425,24 @@ test.describe('쪽지시험 결과 확인 페이지 렌더링 (/quiz/:quizId/res
   })
 
   test('시험명이 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.getByRole('heading').first()).toBeVisible()
   })
 
   test('문제별 정답/오답 결과가 표시된다', async ({ page }) => {
-    test.skip()
     const resultItems = page.getByRole('listitem')
     await expect(resultItems.first()).toBeVisible()
   })
 
   test('정답 항목은 초록색 배경으로 표시된다', async ({ page }) => {
-    test.skip()
     // 정답 항목 컨테이너에 초록 계열 클래스 또는 스타일이 적용됨
     await expect(page.locator('[data-result="correct"]').first()).toBeVisible()
   })
 
   test('오답 항목은 빨간색 배경으로 표시된다', async ({ page }) => {
-    test.skip()
     await expect(page.locator('[data-result="wrong"]').first()).toBeVisible()
   })
 
   test('"완료" 버튼이 표시된다', async ({ page }) => {
-    test.skip()
     await expect(
       page
         .getByRole('button', { name: '완료' })
@@ -489,7 +451,6 @@ test.describe('쪽지시험 결과 확인 페이지 렌더링 (/quiz/:quizId/res
   })
 
   test('"완료" 버튼 클릭 시 /mypage/quiz로 이동한다', async ({ page }) => {
-    test.skip()
     const closeButton = page
       .getByRole('button', { name: '완료' })
       .or(page.getByRole('link', { name: '완료' }))

@@ -19,9 +19,15 @@ export const loginHandlers = [
     }
 
     if (body.email === 'test@test.com' && body.password === 'Test1234!@') {
-      return HttpResponse.json(
-        { access_token: 'mock_access_token' },
-        { status: 200 }
+      return new HttpResponse(
+        JSON.stringify({ access_token: 'access_token' }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Set-Cookie': 'refresh_token=refresh_token; HttpOnly; SameSite=Lax',
+          },
+        }
       )
     }
 

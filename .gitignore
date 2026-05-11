@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .mcp.json
+docs/*
 
 # Environment variables
 .env

@@ -31,4 +31,7 @@ export const meHandlers = [
       updated_at: new Date().toISOString(),
     })
   }),
+  http.delete(`${BASE_URL}/accounts/me`, () => {
+    return new HttpResponse(null, { status: 204 })
+  }),
 ]

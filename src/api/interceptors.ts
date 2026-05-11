@@ -1,29 +1,35 @@
-import axios from 'axios'
 import type {
   AxiosInstance,
   InternalAxiosRequestConfig,
   AxiosError,
 } from 'axios'
-import { ROUTES } from '@/constants/routes'
 import { useAuthStore } from '@/stores/authStore'
 
 interface RetryConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
 
-const redirectToLogin = () => {
-  useAuthStore.getState().logout()
-  localStorage.removeItem('accessToken')
+interface PendingRequest {
+  resolve: (token: string) => void
+  reject: (err: unknown) => void
+}
 
-  if (window.location.pathname !== ROUTES.AUTH.LOGIN) {
-    window.location.href = ROUTES.AUTH.LOGIN
-  }
+const REFRESH_URL = '/accounts/me/refresh'
+
+let isRefreshing = false
+let pendingQueue: PendingRequest[] = []
+
+const processQueue = (error: unknown, token: string | null) => {
+  pendingQueue.forEach(({ resolve, reject }) =>
+    error ? reject(error) : resolve(token!)
+  )
+  pendingQueue = []
 }
 
 export function setupInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem('accessToken')
+      const token = useAuthStore.getState().accessToken
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -41,24 +47,45 @@ export function setupInterceptors(instance: AxiosInstance): void {
         return Promise.reject(error)
       }
 
+      if (originalConfig.url === REFRESH_URL) {
+        return Promise.reject(error)
+      }
+
       if (error.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true
 
+        if (isRefreshing) {
+          return new Promise<string>((resolve, reject) => {
+            pendingQueue.push({ resolve, reject })
+          }).then((token) => {
+            originalConfig.headers.Authorization = `Bearer ${token}`
+            return instance(originalConfig)
+          })
+        }
+
+        isRefreshing = true
+
         try {
-          const { data } = await axios.post(
-            `${import.meta.env.VITE_API_BASE_URL}/api/v1/accounts/me/refresh`,
+          const { data } = await instance.post(
+            REFRESH_URL,
             {},
-            { withCredentials: true }
+            {
+              withCredentials: true,
+            }
           )
 
-          const newToken = data.access_token
-          localStorage.setItem('accessToken', newToken)
+          const newToken: string = data.access_token
+          useAuthStore.getState().setAccessToken(newToken)
+          processQueue(null, newToken)
 
           originalConfig.headers.Authorization = `Bearer ${newToken}`
           return instance(originalConfig)
         } catch (refreshError) {
-          redirectToLogin()
+          processQueue(refreshError, null)
+          useAuthStore.getState().logout()
           return Promise.reject(refreshError)
+        } finally {
+          isRefreshing = false
         }
       }
 

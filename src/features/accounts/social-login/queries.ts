@@ -3,7 +3,11 @@ import instance from '@/api/instance'
 import type { RefreshResponse } from './types'
 
 const refreshApi = async (): Promise<RefreshResponse> => {
-  const { data } = await instance.post<RefreshResponse>('/accounts/me/refresh')
+  const { data } = await instance.post<RefreshResponse>(
+    '/accounts/me/refresh',
+    {},
+    { withCredentials: true }
+  )
   return data
 }
 
