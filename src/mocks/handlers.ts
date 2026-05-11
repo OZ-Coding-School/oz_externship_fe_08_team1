@@ -12,7 +12,7 @@ import { logoutHandlers } from '@/features/accounts/logout'
 import { courseListHandlers } from '@/features/course/list/handler'
 import { cohortHandlers } from '@/features/course/cohorts/handler'
 import { enrollStudentHandlers } from '@/features/accounts/enroll-student/handler'
-import { verificationHandlers } from '@/features/accounts/verification'
+// import { verificationHandlers } from '@/features/accounts/verification'
 import { changePhoneHandlers } from '@/features/accounts/change-phone'
 import { changePasswordHandlers } from '@/features/accounts/change-password'
 import { submissionDetailHandlers } from '@/features/exams/submission-detail'
@@ -35,7 +35,7 @@ export const handlers = [
   ...courseListHandlers,
   ...cohortHandlers,
   ...enrollStudentHandlers,
-  ...verificationHandlers,
+  // ...verificationHandlers,
   ...changePhoneHandlers,
   ...changePasswordHandlers,
   ...submissionDetailHandlers,
