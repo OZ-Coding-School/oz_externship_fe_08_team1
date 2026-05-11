@@ -1,10 +1,10 @@
 /**
  * @figma 마이페이지  https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-5063&m=dev
  */
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Card, Button, Avatar, Spinner } from '@/components'
-import { MypageErrorBoundary } from '@/components/mypage'
+import { MypageErrorBoundary, WithdrawModal } from '@/components/mypage'
 import { ROUTES } from '@/constants/routes'
 import { GENDER_LABEL } from '@/constants/genderLabel'
 import { formatPhone } from '@/utils/formatPhone'
@@ -33,6 +33,7 @@ function MypageContent() {
   const navigate = useNavigate()
   const { data: me } = useMe()
   const { data: enrolledCourses } = useMeEnrolledCourses()
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
 
   const firstCourse = enrolledCourses?.[0]
 
@@ -177,13 +178,23 @@ function MypageContent() {
 
           {/* 오른쪽: 버튼 */}
           <div className="flex-shrink-0">
-            {/* TODO: 회원 탈퇴 모달 연동 */}
-            <Button variant="secondary" size="md" className="px-6 py-3">
+            <Button
+              variant="secondary"
+              size="md"
+              className="px-6 py-3"
+              onClick={() => setIsWithdrawModalOpen(true)}
+            >
               회원 탈퇴하기
             </Button>
           </div>
         </div>
       </div>
+
+      {/* 회원 탈퇴 모달 */}
+      <WithdrawModal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => setIsWithdrawModalOpen(false)}
+      />
     </div>
   )
 }
