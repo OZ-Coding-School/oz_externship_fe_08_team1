@@ -24,5 +24,10 @@ export interface LoginErrorResponse {
 export function isWithdrawnError(
   detail: LoginErrorDetail
 ): detail is LoginWithdrawnErrorDetail {
-  return typeof detail === 'object' && detail !== null && 'expire_at' in detail
+  return (
+    typeof detail === 'object' &&
+    detail !== null &&
+    'expire_at' in detail &&
+    typeof (detail as LoginWithdrawnErrorDetail).expire_at === 'string'
+  )
 }

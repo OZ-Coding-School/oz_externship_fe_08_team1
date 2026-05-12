@@ -1,22 +1,15 @@
-import { useReducer, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router'
-import axios from 'axios'
+import { useReducer, useEffect, useRef } from 'react'
 import { useSendEmail, useVerifyEmail } from '@/features/accounts/verification'
-import { useRestoreAccount } from '@/features/accounts/restore'
 import { useVerificationTimer } from '@/hooks/useVerificationTimer'
-import { useToastStore } from '@/stores/toastStore'
-import { ROUTES } from '@/constants/routes'
 
 const VERIFY_TTL_SEC = 300
+const BANNER_HIDE_MS = 3000
 
-function isValidEmail(email: string): boolean {
+export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-type Step = 'status' | 'verification'
-
-interface ModalState {
-  step: Step
+interface EmailCodeState {
   email: string
   code: string
   emailToken: string
@@ -24,28 +17,25 @@ interface ModalState {
   codeVerified: boolean
   emailError: string
   codeError: string
-  showSuccess: boolean
   bannerVisible: boolean
 }
 
-type ModalAction =
+type EmailCodeAction =
   | { type: 'RESET'; email: string }
-  | { type: 'SET_STEP'; step: Step }
   | { type: 'SET_EMAIL'; email: string }
   | { type: 'SET_CODE'; code: string }
   | { type: 'SET_EMAIL_ERROR'; error: string }
   | { type: 'SET_CODE_ERROR'; error: string }
   | { type: 'SEND_EMAIL_START' }
+  | { type: 'SEND_EMAIL_FAIL'; error: string }
   | { type: 'CODE_SENT' }
   | { type: 'CODE_VERIFIED'; emailToken: string }
   | { type: 'TOKEN_EXPIRED' }
   | { type: 'SHOW_BANNER' }
   | { type: 'HIDE_BANNER' }
-  | { type: 'RESTORE_SUCCESS' }
 
-function makeInitialState(email: string): ModalState {
+function makeInitialState(email: string): EmailCodeState {
   return {
-    step: 'status',
     email,
     code: '',
     emailToken: '',
@@ -53,19 +43,28 @@ function makeInitialState(email: string): ModalState {
     codeVerified: false,
     emailError: '',
     codeError: '',
-    showSuccess: false,
     bannerVisible: false,
   }
 }
 
-function reducer(state: ModalState, action: ModalAction): ModalState {
+function reducer(
+  state: EmailCodeState,
+  action: EmailCodeAction
+): EmailCodeState {
   switch (action.type) {
     case 'RESET':
       return makeInitialState(action.email)
-    case 'SET_STEP':
-      return { ...state, step: action.step }
     case 'SET_EMAIL':
-      return { ...state, email: action.email, emailError: '' }
+      return {
+        ...state,
+        email: action.email,
+        emailError: '',
+        code: '',
+        codeSent: false,
+        codeVerified: false,
+        emailToken: '',
+        codeError: '',
+      }
     case 'SET_CODE':
       return { ...state, code: action.code, codeError: '' }
     case 'SET_EMAIL_ERROR':
@@ -79,6 +78,17 @@ function reducer(state: ModalState, action: ModalAction): ModalState {
         code: '',
         codeError: '',
         codeVerified: false,
+        emailToken: '',
+      }
+    case 'SEND_EMAIL_FAIL':
+      return {
+        ...state,
+        emailError: action.error,
+        codeSent: false,
+        code: '',
+        codeVerified: false,
+        emailToken: '',
+        codeError: '',
       }
     case 'CODE_SENT':
       return { ...state, codeSent: true }
@@ -100,55 +110,43 @@ function reducer(state: ModalState, action: ModalAction): ModalState {
       return { ...state, bannerVisible: true }
     case 'HIDE_BANNER':
       return { ...state, bannerVisible: false }
-    case 'RESTORE_SUCCESS':
-      return { ...state, showSuccess: true }
     default:
       return state
   }
 }
 
-export interface UseRestoreWithdrawnModalReturn {
-  step: Step
+export interface UseRecoveryEmailCodeFlowReturn {
   email: string
   code: string
+  emailToken: string
   codeSent: boolean
   codeVerified: boolean
   emailError: string
   codeError: string
-  showSuccess: boolean
   bannerVisible: boolean
   timerFormatted: string
   timerTimedOut: boolean
   isSendingEmail: boolean
   isVerifyingCode: boolean
-  isRestoring: boolean
   isEmailValid: boolean
   onEmailChange: (email: string) => void
   onCodeChange: (code: string) => void
-  onGoToVerification: () => void
   onSendEmail: () => void
   onVerifyCode: () => void
-  onConfirmRestore: () => void
-  onNavigateToLogin: () => void
+  markTokenExpired: () => void
 }
 
-interface UseRestoreWithdrawnModalProps {
+interface UseRecoveryEmailCodeFlowProps {
   isOpen: boolean
-  onClose: () => void
   initialEmail?: string
 }
 
-export function useRestoreWithdrawnModal({
+export function useRecoveryEmailCodeFlow({
   isOpen,
-  onClose,
   initialEmail = '',
-}: UseRestoreWithdrawnModalProps): UseRestoreWithdrawnModalReturn {
-  const navigate = useNavigate()
-  const showToast = useToastStore((s) => s.show)
-
+}: UseRecoveryEmailCodeFlowProps): UseRecoveryEmailCodeFlowReturn {
   const [state, dispatch] = useReducer(reducer, makeInitialState(initialEmail))
   const {
-    step,
     email,
     code,
     emailToken,
@@ -156,7 +154,6 @@ export function useRestoreWithdrawnModal({
     codeVerified,
     emailError,
     codeError,
-    showSuccess,
     bannerVisible,
   } = state
 
@@ -166,13 +163,15 @@ export function useRestoreWithdrawnModal({
 
   const sendEmail = useSendEmail()
   const verifyEmail = useVerifyEmail()
-  const restoreAccount = useRestoreAccount()
 
   useEffect(() => {
     if (isOpen) {
       dispatch({ type: 'RESET', email: initialEmail })
       resetTimer()
-      if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current)
+      if (bannerTimerRef.current) {
+        clearTimeout(bannerTimerRef.current)
+        bannerTimerRef.current = null
+      }
     }
   }, [isOpen, initialEmail, resetTimer])
 
@@ -181,11 +180,6 @@ export function useRestoreWithdrawnModal({
       if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current)
     }
   }, [])
-
-  const onNavigateToLogin = useCallback(() => {
-    onClose()
-    navigate(ROUTES.AUTH.LOGIN)
-  }, [onClose, navigate])
 
   function onSendEmail() {
     if (!isValidEmail(email)) {
@@ -206,16 +200,18 @@ export function useRestoreWithdrawnModal({
           timer.start()
           dispatch({ type: 'SHOW_BANNER' })
           if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current)
-          bannerTimerRef.current = setTimeout(
-            () => dispatch({ type: 'HIDE_BANNER' }),
-            3000
-          )
+          bannerTimerRef.current = setTimeout(() => {
+            dispatch({ type: 'HIDE_BANNER' })
+            bannerTimerRef.current = null
+          }, BANNER_HIDE_MS)
         },
-        onError: () =>
+        onError: () => {
           dispatch({
-            type: 'SET_EMAIL_ERROR',
+            type: 'SEND_EMAIL_FAIL',
             error: '해당 이메일로 인증 코드를 전송할 수 없습니다.',
-          }),
+          })
+          timer.stop()
+        },
       }
     )
   }
@@ -237,49 +233,24 @@ export function useRestoreWithdrawnModal({
     )
   }
 
-  function onConfirmRestore() {
-    if (!emailToken) return
-    restoreAccount.mutate(
-      { email_token: emailToken },
-      {
-        onSuccess: () => dispatch({ type: 'RESTORE_SUCCESS' }),
-        onError: (err) => {
-          if (axios.isAxiosError(err)) {
-            const status = err.response?.status
-            if (status === 400 || status === 401) {
-              dispatch({ type: 'TOKEN_EXPIRED' })
-              return
-            }
-          }
-          showToast('계정 복구에 실패했습니다. 다시 시도해주세요.', 'error')
-        },
-      }
-    )
-  }
-
   return {
-    step,
     email,
     code,
+    emailToken,
     codeSent,
     codeVerified,
     emailError,
     codeError,
-    showSuccess,
     bannerVisible,
     timerFormatted: timer.formattedTime,
     timerTimedOut: timer.isTimedOut,
     isSendingEmail: sendEmail.isPending,
     isVerifyingCode: verifyEmail.isPending,
-    isRestoring: restoreAccount.isPending,
     isEmailValid: isValidEmail(email),
     onEmailChange: (val) => dispatch({ type: 'SET_EMAIL', email: val }),
     onCodeChange: (val) => dispatch({ type: 'SET_CODE', code: val }),
-    onGoToVerification: () =>
-      dispatch({ type: 'SET_STEP', step: 'verification' }),
     onSendEmail,
     onVerifyCode,
-    onConfirmRestore,
-    onNavigateToLogin,
+    markTokenExpired: () => dispatch({ type: 'TOKEN_EXPIRED' }),
   }
 }
