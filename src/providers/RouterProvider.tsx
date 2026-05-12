@@ -14,7 +14,10 @@ export function RouterProvider() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
-        <Route path="social-callback" element={<SocialCallbackPage />} />
+        <Route
+          path="/auth/callback/social-callback"
+          element={<SocialCallbackPage />}
+        />
         <Route path="signup">
           <Route index element={<SignupSelectPage />} />
           <Route path="form" element={<SignupPage />} />

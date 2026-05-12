@@ -28,7 +28,7 @@ export function LoginPage() {
   const { mutate: login, isPending } = useLogin()
 
   const handleSocialLogin = (provider: 'kakao' | 'naver') => {
-    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}/`
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}`
   }
 
   const handleSubmit = (e: React.FormEvent) => {
