@@ -24,8 +24,23 @@ export function RouterProvider() {
         </Route>
       </Route>
 
-      {/* 시험 응시 — 헤더/푸터 없이 전체화면 전용 레이아웃 */}
-      <Route path="quiz/:quizId/exam" element={<QuizExamPage />} />
+      {/* 시험 응시/결과 — 헤더/푸터 없이 전용 레이아웃 */}
+      <Route
+        path="quiz/:quizId/exam"
+        element={
+          <ProtectedRoute>
+            <QuizExamPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="quiz/:submissionId/result"
+        element={
+          <ProtectedRoute>
+            <QuizResultPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route element={<DefaultLayout />}>
         <Route index element={<HomePage />} />
@@ -42,17 +57,6 @@ export function RouterProvider() {
           <Route path="edit" element={<MypageEditPage />} />
           <Route path="change-password" element={<ChangePasswordPage />} />
           <Route path="quiz" element={<QuizListPage />} />
-        </Route>
-
-        <Route path="quiz/:quizId">
-          <Route
-            path="result"
-            element={
-              <ProtectedRoute>
-                <QuizResultPage />
-              </ProtectedRoute>
-            }
-          />
         </Route>
 
         <Route path="showcase" element={<ComponentShowcase />} />

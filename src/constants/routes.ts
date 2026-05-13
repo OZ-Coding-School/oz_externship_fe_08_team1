@@ -19,7 +19,7 @@ export const ROUTES = {
 
   QUIZ: {
     EXAM: '/quiz/:quizId/exam',
-    RESULT: '/quiz/:quizId/result',
+    RESULT: '/quiz/:submissionId/result',
   },
 
   QNA: {
