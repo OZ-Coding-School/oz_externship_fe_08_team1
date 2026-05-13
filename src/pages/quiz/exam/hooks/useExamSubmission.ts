@@ -94,12 +94,25 @@ export function useExamSubmission({
         },
         {
           onSuccess: (res) => {
+            if (res.submission_id == null) {
+              showToast(
+                '제출 결과를 불러올 수 없습니다. 다시 시도해주세요.',
+                'error'
+              )
+              isSubmittingRef.current = false
+              setIsSubmitted(false)
+              return
+            }
+            const resultUrl = ROUTES.QUIZ.RESULT.replace(
+              ':submissionId',
+              String(res.submission_id)
+            )
             if (reason === 'button') {
               // 버튼 제출: 완료 모달을 표시하고 수험자 확인 후 이동
-              setSubmitRedirectUrl(res.redirect_url)
+              setSubmitRedirectUrl(resultUrl)
             } else {
               // 타이머/부정행위: 모달 없이 바로 결과 페이지로 이동
-              navigate(res.redirect_url, { replace: true })
+              navigate(resultUrl, { replace: true })
             }
           },
           onError: (error) => {

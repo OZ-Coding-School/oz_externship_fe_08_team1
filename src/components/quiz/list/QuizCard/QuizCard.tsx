@@ -10,7 +10,10 @@ interface QuizCardProps {
   item: DeploymentListItem
 }
 
-type QuizCardAction = { type: 'navigate'; path: string } | { type: 'openModal' }
+type QuizCardAction =
+  | { type: 'navigate'; path: string }
+  | { type: 'openModal' }
+  | { type: 'disabled' }
 
 interface QuizCardViewModel {
   badgeLabel: string
@@ -21,7 +24,14 @@ interface QuizCardViewModel {
 }
 
 function getQuizCardViewModel(item: DeploymentListItem): QuizCardViewModel {
-  const { id, exam, exam_info, question_count, total_score, is_done } = item
+  const {
+    exam,
+    exam_info,
+    question_count,
+    total_score,
+    is_done,
+    submission_id,
+  } = item
 
   if (is_done) {
     return {
@@ -29,10 +39,16 @@ function getQuizCardViewModel(item: DeploymentListItem): QuizCardViewModel {
       badgeClassName: 'bg-success-bg text-success-dark',
       subtitle: `${exam.subject.title} · ${exam_info.score ?? 0}점/${total_score}점 · ${exam_info.correct_answer_count ?? 0}/${question_count}개 정답`,
       buttonLabel: '상세보기',
-      action: {
-        type: 'navigate',
-        path: ROUTES.QUIZ.RESULT.replace(':quizId', String(id)),
-      },
+      action:
+        submission_id != null
+          ? {
+              type: 'navigate',
+              path: ROUTES.QUIZ.RESULT.replace(
+                ':submissionId',
+                String(submission_id)
+              ),
+            }
+          : { type: 'disabled' },
     }
   }
 
@@ -74,7 +90,7 @@ export function QuizCard({ item }: QuizCardProps) {
   const handleButtonClick = () => {
     if (vm.action.type === 'navigate') {
       navigate(vm.action.path)
-    } else {
+    } else if (vm.action.type === 'openModal') {
       setIsModalOpen(true)
     }
   }
@@ -102,6 +118,7 @@ export function QuizCard({ item }: QuizCardProps) {
         variant="outline"
         size="md"
         className="w-[112px]"
+        disabled={vm.action.type === 'disabled'}
         onClick={handleButtonClick}
       >
         {vm.buttonLabel}

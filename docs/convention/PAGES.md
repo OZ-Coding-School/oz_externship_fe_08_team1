@@ -51,11 +51,11 @@ src/pages/
 
 ### quiz/
 
-| 파일               | 라우트                 | 설명                  |
-| ------------------ | ---------------------- | --------------------- |
-| QuizListPage.tsx   | `/mypage/quiz`         | 쪽지시험 목록         |
-| QuizExamPage.tsx   | `/quiz/:quizId/exam`   | 시험 응시 (문제 풀이) |
-| QuizResultPage.tsx | `/quiz/:quizId/result` | 결과 확인             |
+| 파일               | 라우트                       | 설명                  |
+| ------------------ | ---------------------------- | --------------------- |
+| QuizListPage.tsx   | `/mypage/quiz`               | 쪽지시험 목록         |
+| QuizExamPage.tsx   | `/quiz/:quizId/exam`         | 시험 응시 (문제 풀이) |
+| QuizResultPage.tsx | `/quiz/:submissionId/result` | 결과 확인             |
 
 참가코드 입력, 제출 완료 안내는 모달로 처리
 

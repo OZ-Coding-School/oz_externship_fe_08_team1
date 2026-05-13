@@ -1,0 +1,1 @@
+export { QuizResultErrorBoundary } from './QuizResultErrorBoundary'

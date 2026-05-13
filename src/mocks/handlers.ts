@@ -1,14 +1,14 @@
 import { http, HttpResponse } from 'msw'
 import { deploymentsHandlers } from '@/features/exams/deployments'
-// import { meHandlers } from '@/features/accounts/me'
-// import { meEnrolledCoursesHandlers } from '@/features/accounts/me-enrolled-courses'
+import { meHandlers } from '@/features/accounts/me'
+import { meEnrolledCoursesHandlers } from '@/features/accounts/me-enrolled-courses'
 import { checkCodeHandlers } from '@/features/exams/deployment-check-code'
-// import { checkNicknameHandlers } from '@/features/accounts/check-nickname'
+import { checkNicknameHandlers } from '@/features/accounts/check-nickname'
 import { meProfileImageHandlers } from '@/features/accounts/me-profile-image'
 import { deploymentDetailHandlers } from '@/features/exams/deployment-detail'
 import { deploymentStatusHandlers } from '@/features/exams/deployment-status'
 import { submissionsHandlers } from '@/features/exams/submissions'
-// import { logoutHandlers } from '@/features/accounts/logout'
+import { logoutHandlers } from '@/features/accounts/logout'
 import { courseListHandlers } from '@/features/course/list/handler'
 import { cohortHandlers } from '@/features/course/cohorts/handler'
 import { enrollStudentHandlers } from '@/features/accounts/enroll-student/handler'
@@ -21,17 +21,17 @@ export const handlers = [
   http.get('/api/health', () => {
     return HttpResponse.json({ status: 'ok' })
   }),
-  // ...meHandlers,
-  // ...meEnrolledCoursesHandlers,
+  ...meHandlers,
+  ...meEnrolledCoursesHandlers,
   ...deploymentsHandlers,
   // status / check-code는 deploymentDetail보다 먼저 등록해 패스 우선순위 확보
   ...deploymentStatusHandlers,
   ...checkCodeHandlers,
-  // ...checkNicknameHandlers,
+  ...checkNicknameHandlers,
   ...meProfileImageHandlers,
   ...deploymentDetailHandlers,
   ...submissionsHandlers,
-  // ...logoutHandlers,
+  ...logoutHandlers,
   ...courseListHandlers,
   ...cohortHandlers,
   ...enrollStudentHandlers,

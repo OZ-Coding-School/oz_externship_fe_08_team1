@@ -16,8 +16,8 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
     {
       id: 1,
       question: 'JavaScript에서 null == undefined는 true이다.',
-      prompt: '',
-      blank_count: 0,
+      prompt: null,
+      blank_count: null,
       options: ['O', 'X'],
       type: 'ox',
       answer: ['O'],
@@ -30,8 +30,8 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
     {
       id: 2,
       question: 'Array.prototype.map()의 반환값은 무엇인가?',
-      prompt: '',
-      blank_count: 0,
+      prompt: null,
+      blank_count: null,
       options: ['새로운 배열', '원본 배열', 'undefined', 'null'],
       type: 'single_choice',
       answer: ['새로운 배열'],
@@ -45,8 +45,8 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       id: 3,
       question:
         '다음 중 JavaScript의 원시 타입(Primitive type)에 해당하는 것을 모두 고르시오.',
-      prompt: '',
-      blank_count: 0,
+      prompt: null,
+      blank_count: null,
       options: ['string', 'object', 'number', 'symbol', 'array'],
       type: 'multiple_choice',
       answer: ['string', 'number', 'symbol'],
@@ -59,9 +59,9 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
     {
       id: 4,
       question: 'Promise의 세 가지 상태를 쉼표로 구분하여 적으시오.',
-      prompt: '',
-      blank_count: 0,
-      options: [],
+      prompt: null,
+      blank_count: null,
+      options: null,
       type: 'short_answer',
       answer: ['pending, fulfilled, rejected'],
       submitted_answer: ['pending, fulfilled, rejected'],
@@ -76,7 +76,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       prompt:
         '자바스크립트에서 [blank]는 값이 없음을 의미하고, [blank]는 존재하지 않음을 의미한다.',
       blank_count: 2,
-      options: [],
+      options: null,
       type: 'fill_blank',
       answer: ['null', 'undefined'],
       submitted_answer: ['undefined', 'null'],
@@ -88,12 +88,17 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
     {
       id: 6,
       question: '다음 Promise 실행 순서를 올바르게 배열하시오.',
-      prompt: '',
-      blank_count: 0,
+      prompt: null,
+      blank_count: null,
       options: ['콜백 등록', 'resolve 호출', 'Promise 생성', 'then 실행'],
       type: 'ordering',
       answer: ['Promise 생성', '콜백 등록', 'resolve 호출', 'then 실행'],
-      submitted_answer: ['Promise 생성', '콜백 등록', 'resolve 호출', 'then 실행'],
+      submitted_answer: [
+        'Promise 생성',
+        '콜백 등록',
+        'resolve 호출',
+        'then 실행',
+      ],
       point: 10,
       explanation:
         'Promise는 생성 → 콜백 등록 → resolve 호출 → then 실행 순서로 동작합니다.',
@@ -104,9 +109,9 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
   score: 40,
   total_score: 60,
   correct_answer_count: 4,
-  elapsed_time: 312,
+  elapsed_time: 15,
   started_at: '2026-05-11T05:00:00.000Z',
-  submitted_at: '2026-05-11T05:05:12.000Z',
+  submitted_at: '2026-05-11T05:15:00.000Z',
 }
 
 export const submissionDetailHandlers = [
@@ -115,13 +120,16 @@ export const submissionDetailHandlers = [
 
     // 403 테스트: submissionId=403
     if (submissionId === 403) {
-      return HttpResponse.json({ detail: '권한이 없습니다.' }, { status: 403 })
+      return HttpResponse.json(
+        { error_detail: '권한이 없습니다.' },
+        { status: 403 }
+      )
     }
 
     // 404 테스트: submissionId=404 또는 NaN
     if (submissionId === 404 || Number.isNaN(submissionId)) {
       return HttpResponse.json(
-        { detail: '해당 시험 정보를 찾을 수 없습니다.' },
+        { error_detail: '해당 시험 정보를 찾을 수 없습니다.' },
         { status: 404 }
       )
     }

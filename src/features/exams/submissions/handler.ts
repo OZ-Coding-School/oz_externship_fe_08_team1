@@ -62,7 +62,7 @@ export const submissionsHandlers = [
         submission_id: 1001,
         score: 80,
         correct_answer_count: 5,
-        redirect_url: `/quiz/${body.deployment_id ?? 2}/result`,
+        redirect_url: `/quiz/1001/result`,
       },
       { status: HTTP_STATUS.CREATED }
     )

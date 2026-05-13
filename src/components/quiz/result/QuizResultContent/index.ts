@@ -1,0 +1,1 @@
+export { QuizResultContent } from './QuizResultContent'
