@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { Input } from '@/components/common/Input'
@@ -16,7 +16,7 @@ import logo from '@/assets/logo.png'
 export function LoginPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { login: setAuth } = useAuthStore()
+  const { login: setAuth, isAuthenticated, isLoading } = useAuthStore()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,6 +26,12 @@ export function LoginPage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false)
 
   const { mutate: login, isPending } = useLogin()
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate('/', { replace: true })
+    }
+  }, [isAuthenticated, isLoading, navigate])
 
   const handleSocialLogin = (provider: 'kakao' | 'naver') => {
     window.location.href = `${import.meta.env.VITE_API_BASE_URL}/accounts/social-login/${provider}`
