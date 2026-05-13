@@ -57,7 +57,6 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
     setCode('')
     setCodeError('')
     setCodeVerified(false)
-    timer.reset()
 
     sendSms.mutate(
       { phone_number: apiPhone, purpose: 'phone_change' },

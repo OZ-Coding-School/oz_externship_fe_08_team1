@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Check, RotateCw } from 'lucide-react'
 import { Modal, Input, Button } from '@/components'
-import { useRestoreVerification } from './useRestoreVerification'
+import { useAccountRestoreFlow } from './useAccountRestoreFlow'
 
 interface VerificationStepProps {
   isOpen: boolean
@@ -37,17 +37,17 @@ export function VerificationStep({
     onSendEmail,
     onVerifyCode,
     onConfirmRestore,
-    onNavigateToLogin,
-  } = useRestoreVerification({ isOpen, onClose, onRestored, initialEmail })
+    finishRestoreFlow,
+  } = useAccountRestoreFlow({ isOpen, onClose, onRestored, initialEmail })
 
   useEffect(() => {
     if (!showSuccess) return
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onNavigateToLogin()
+      if (e.key === 'Escape') finishRestoreFlow()
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [showSuccess, onNavigateToLogin])
+  }, [showSuccess, finishRestoreFlow])
 
   return (
     <>
@@ -71,11 +71,15 @@ export function VerificationStep({
       {showSuccess &&
         isOpen &&
         createPortal(
-          <button
-            type="button"
+          <div
+            role="button"
+            tabIndex={0}
             aria-label="계정 복구 완료, 로그인 페이지로 이동"
             className="fixed inset-0 z-55 cursor-pointer bg-gray-900/60 backdrop-blur-sm"
-            onClick={onNavigateToLogin}
+            onClick={finishRestoreFlow}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') finishRestoreFlow()
+            }}
           />,
           document.body
         )}
@@ -102,7 +106,7 @@ export function VerificationStep({
 
       <Modal
         isOpen={isOpen}
-        onClose={showSuccess ? onNavigateToLogin : onClose}
+        onClose={showSuccess ? finishRestoreFlow : onClose}
         hideCloseButton={showSuccess}
         closeOnOverlayClick={false}
         maxWidth="max-w-[396px] max-h-[437px]"

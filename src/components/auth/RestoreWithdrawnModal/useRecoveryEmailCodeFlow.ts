@@ -165,14 +165,13 @@ export function useRecoveryEmailCodeFlow({
   const verifyEmail = useVerifyEmail()
 
   useEffect(() => {
-    if (isOpen) {
-      dispatch({ type: 'RESET', email: initialEmail })
-      resetTimer()
-      if (bannerTimerRef.current) {
-        clearTimeout(bannerTimerRef.current)
-        bannerTimerRef.current = null
-      }
+    if (bannerTimerRef.current) {
+      clearTimeout(bannerTimerRef.current)
+      bannerTimerRef.current = null
     }
+    if (!isOpen) return
+    dispatch({ type: 'RESET', email: initialEmail })
+    resetTimer()
   }, [isOpen, initialEmail, resetTimer])
 
   useEffect(() => {

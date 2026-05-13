@@ -5,11 +5,11 @@ import { useToastStore } from '@/stores/toastStore'
 import { useRecoveryEmailCodeFlow } from './useRecoveryEmailCodeFlow'
 import type { UseRecoveryEmailCodeFlowReturn } from './useRecoveryEmailCodeFlow'
 
-export interface UseRestoreVerificationReturn extends UseRecoveryEmailCodeFlowReturn {
+export interface UseAccountRestoreFlowReturn extends UseRecoveryEmailCodeFlowReturn {
   showSuccess: boolean
   isRestoring: boolean
   onConfirmRestore: () => void
-  onNavigateToLogin: () => void
+  finishRestoreFlow: () => void
 }
 
 interface UseRestoreVerificationProps {
@@ -19,19 +19,19 @@ interface UseRestoreVerificationProps {
   initialEmail?: string
 }
 
-export function useRestoreVerification({
+export function useAccountRestoreFlow({
   isOpen,
   onClose,
   onRestored,
   initialEmail = '',
-}: UseRestoreVerificationProps): UseRestoreVerificationReturn {
+}: UseRestoreVerificationProps): UseAccountRestoreFlowReturn {
   const showToast = useToastStore((s) => s.show)
   const restoreAccount = useRestoreAccount()
   const [showSuccess, setShowSuccess] = useState(false)
 
   const emailCodeFlow = useRecoveryEmailCodeFlow({ isOpen, initialEmail })
 
-  const onNavigateToLogin = useCallback(() => {
+  const finishRestoreFlow = useCallback(() => {
     onClose()
     onRestored()
   }, [onClose, onRestored])
@@ -61,6 +61,6 @@ export function useRestoreVerification({
     showSuccess,
     isRestoring: restoreAccount.isPending,
     onConfirmRestore,
-    onNavigateToLogin,
+    finishRestoreFlow,
   }
 }

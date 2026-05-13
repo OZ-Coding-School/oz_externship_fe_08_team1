@@ -14,7 +14,6 @@ import { useAuthStore } from '@/stores/authStore'
 import type { AxiosError } from 'axios'
 import type { LoginErrorResponse } from '@/features/accounts/login/types'
 import { isWithdrawnError } from '@/features/accounts/login/types'
-import { ROUTES } from '@/constants/routes'
 import logo from '@/assets/logo.png'
 
 export function LoginPage() {
@@ -186,10 +185,7 @@ export function LoginPage() {
       <RestoreWithdrawnModal
         isOpen={isRestoreModalOpen}
         onClose={() => setIsRestoreModalOpen(false)}
-        onRestored={() => {
-          setIsRestoreModalOpen(false)
-          navigate(ROUTES.AUTH.LOGIN)
-        }}
+        onRestored={() => setIsRestoreModalOpen(false)}
         initialEmail={email}
         expireAt={withdrawnExpireAt}
       />
