@@ -18,7 +18,6 @@ import { changePasswordHandlers } from '@/features/accounts/change-password'
 import { submissionDetailHandlers } from '@/features/exams/submission-detail'
 import { restoreHandlers } from '@/features/accounts/restore'
 import { socialLoginHandlers } from '@/features/accounts/social-login'
-import { loginHandlers } from '@/features/accounts/login'
 
 export const handlers = [
   http.get('/api/health', () => {
@@ -41,7 +40,6 @@ export const handlers = [
   // ...verificationHandlers,
   ...changePhoneHandlers,
   ...restoreHandlers,
-  ...loginHandlers,
   ...socialLoginHandlers,
   ...changePasswordHandlers,
   ...submissionDetailHandlers,
