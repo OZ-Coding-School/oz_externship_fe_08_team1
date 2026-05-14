@@ -6,6 +6,7 @@ import { PasswordInput } from '@/components/common/PasswordInput'
 import { Button } from '@/components/common/Button'
 import { SocialLoginButton } from '@/components/common/SocialLoginButton'
 import { AlertModal } from '@/components/common/Modal/AlertModal'
+import { FindEmailModal } from '@/components/auth/FindEmailModal'
 import { useLogin } from '@/features/accounts/login/queries'
 import { meQueries } from '@/features/accounts/me/queries'
 import { useAuthStore } from '@/stores/authStore'
@@ -24,6 +25,7 @@ export function LoginPage() {
   const [passwordError, setPasswordError] = useState('')
   const [alertMessage, setAlertMessage] = useState('')
   const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [isFindEmailOpen, setIsFindEmailOpen] = useState(false)
 
   const { mutate: login, isPending } = useLogin()
 
@@ -139,7 +141,7 @@ export function LoginPage() {
           />
           <PasswordInput
             label="비밀번호"
-            placeholder="6~15자리 영문 대소문자, 숫자, 특수문자 포함"
+            placeholder="6~15자리 영문 대소문자, 특수문자 포함"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)
@@ -149,7 +151,9 @@ export function LoginPage() {
             errorMessage={passwordError}
           />
           <div className="flex gap-2 text-sm text-gray-600">
-            <button type="button">아이디 찾기</button>
+            <button type="button" onClick={() => setIsFindEmailOpen(true)}>
+              아이디 찾기
+            </button>
             <span>|</span>
             <button type="button">비밀번호 찾기</button>
           </div>
@@ -169,6 +173,12 @@ export function LoginPage() {
         isOpen={isAlertOpen}
         onClose={() => setIsAlertOpen(false)}
         message={alertMessage}
+      />
+
+      <FindEmailModal
+        isOpen={isFindEmailOpen}
+        onClose={() => setIsFindEmailOpen(false)}
+        onFindPassword={() => {}}
       />
     </main>
   )
