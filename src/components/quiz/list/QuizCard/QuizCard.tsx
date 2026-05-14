@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/common/Button'
+import type { ButtonVariant } from '@/components/common/Button'
 import { ROUTES } from '@/constants/routes'
 import { ExamThumbnail } from '@/components/quiz/list/ExamThumbnail'
 import { QuizCodeModal } from '@/components/quiz/list/QuizCodeModal'
@@ -20,6 +21,7 @@ interface QuizCardViewModel {
   badgeClassName: string
   subtitle: string
   buttonLabel: string
+  buttonVariant: ButtonVariant
   action: QuizCardAction
 }
 
@@ -39,6 +41,7 @@ function getQuizCardViewModel(item: DeploymentListItem): QuizCardViewModel {
       badgeClassName: 'bg-success-bg text-success-dark',
       subtitle: `${exam.subject.title} · ${exam_info.score ?? 0}점/${total_score}점 · ${exam_info.correct_answer_count ?? 0}/${question_count}개 정답`,
       buttonLabel: '상세보기',
+      buttonVariant: 'outline-neutral',
       action:
         submission_id != null
           ? {
@@ -57,6 +60,7 @@ function getQuizCardViewModel(item: DeploymentListItem): QuizCardViewModel {
     badgeClassName: 'bg-error-bg text-error-dark',
     subtitle: `${exam.subject.title} · 응시하고 점수를 확인해보세요!`,
     buttonLabel: '응시하기',
+    buttonVariant: 'outline',
     action: { type: 'openModal' },
   }
 }
@@ -115,7 +119,7 @@ export function QuizCard({ item }: QuizCardProps) {
 
       {/* 우측: CTA 버튼 */}
       <Button
-        variant="outline"
+        variant={vm.buttonVariant}
         size="md"
         className="w-[112px]"
         disabled={vm.action.type === 'disabled'}

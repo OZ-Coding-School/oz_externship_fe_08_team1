@@ -4,6 +4,7 @@ export type ButtonVariant =
   | 'primary'
   | 'secondary'
   | 'outline'
+  | 'outline-neutral'
   | 'ghost'
   | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg'
@@ -22,7 +23,9 @@ const variantClasses: Record<ButtonVariant, string> = {
   secondary:
     'bg-bg-muted text-text-heading border border-border-base hover:bg-gray-200 active:bg-gray-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   outline:
-    'bg-primary-100 text-primary border border-primary hover:bg-primary-200 active:bg-primary-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:bg-gray-200 disabled:text-gray-600 disabled:border-gray-300 disabled:cursor-not-allowed',
+    'bg-primary-100 text-primary border border-primary hover:bg-primary-200 active:bg-primary-500 active:border-primary-800 active:text-text-inverse focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:bg-gray-200 disabled:text-gray-600 disabled:border-gray-300 disabled:cursor-not-allowed',
+  'outline-neutral':
+    'bg-transparent text-gray-600 border border-gray-300 hover:bg-primary-100 hover:border-primary hover:text-primary active:bg-primary-200 active:border-primary-700 active:text-primary-700 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   ghost:
     'bg-transparent text-primary hover:bg-bg-accent active:bg-primary-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
   danger:
