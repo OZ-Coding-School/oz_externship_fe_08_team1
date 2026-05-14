@@ -183,9 +183,7 @@ export function VerificationStep({
                   className="placeholder:text-sm placeholder:font-normal placeholder:tracking-[-0.03em]"
                   value={code}
                   inputMode="numeric"
-                  onChange={(e) =>
-                    onCodeChange(e.target.value.replace(/\D/g, ''))
-                  }
+                  onChange={(e) => onCodeChange(e.target.value)}
                   onKeyDown={(e) => {
                     if (
                       e.key === 'Enter' &&

@@ -1,10 +1,8 @@
 import { http, HttpResponse } from 'msw'
 import type { RestoreAccountRequest, RestoreAccountResponse } from './types'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
-
 export const restoreHandlers = [
-  http.post(`${BASE_URL}/accounts/restore`, async ({ request }) => {
+  http.post(`/accounts/restore`, async ({ request }) => {
     const body = (await request.json()) as RestoreAccountRequest
     if (!body.email_token) {
       return HttpResponse.json(
