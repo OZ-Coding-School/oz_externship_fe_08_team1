@@ -1,0 +1,1 @@
+export { MypageEnrolledCourses } from './MypageEnrolledCourses'

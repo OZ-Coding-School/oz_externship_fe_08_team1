@@ -45,12 +45,7 @@ export function useWithdraw() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: WithdrawRequest) => {
-      await api.delete('accounts/me', {
-        data: {
-          reason: body.reason,
-          ...(body.reason_detail ? { reason_detail: body.reason_detail } : {}),
-        },
-      })
+      await api.delete('accounts/withdrawal', { data: body })
     },
     onSuccess: () => {
       queryClient.clear()

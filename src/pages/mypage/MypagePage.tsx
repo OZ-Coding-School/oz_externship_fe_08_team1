@@ -7,9 +7,13 @@ import { Card, Button, Avatar, Spinner } from '@/components'
 import { MypageErrorBoundary, WithdrawModal } from '@/components/mypage'
 import { ROUTES } from '@/constants/routes'
 import { GENDER_LABEL } from '@/constants/genderLabel'
+import { ROLE_LABEL } from '@/constants/roleLabel'
+import { POSITION_LABEL } from '@/constants/positionLabel'
 import { formatPhone } from '@/utils/formatPhone'
 import { useMe } from '@/features/accounts/me'
-import { useMeEnrolledCourses } from '@/features/accounts/me-enrolled-courses'
+import { useAuthStore } from '@/stores/authStore'
+import { ProfileIcon } from '@/components/layout/Header/icons'
+import { MypageEnrolledCourses } from '@/components/mypage'
 
 interface InfoRowProps {
   label: string
@@ -32,14 +36,18 @@ function InfoRow({ label, value }: InfoRowProps) {
 function MypageContent() {
   const navigate = useNavigate()
   const { data: me } = useMe()
-  const { data: enrolledCourses } = useMeEnrolledCourses()
+  const { user } = useAuthStore()
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
 
-  const firstCourse = enrolledCourses?.[0]
+  const roleDisplay =
+    me.role === 'ADMIN' && me.position && POSITION_LABEL[me.position]
+      ? `${ROLE_LABEL[me.role]}(${POSITION_LABEL[me.position]})`
+      : ROLE_LABEL[me.role]
 
   const profileRows: InfoRowProps[] = [
     { label: '닉네임', value: me.nickname },
     { label: '이메일', value: me.email },
+    { label: '권한', value: roleDisplay },
   ]
 
   const personalRows: InfoRowProps[] = [
@@ -48,10 +56,12 @@ function MypageContent() {
       label: '휴대전화',
       value: me.phone_number ? formatPhone(me.phone_number) : '-',
     },
-    { label: '성별', value: GENDER_LABEL[me.gender] ?? me.gender },
+    {
+      label: '성별',
+      value: me.gender ? (GENDER_LABEL[me.gender] ?? me.gender) : '-',
+    },
     { label: '생년월일', value: me.birthday?.replace(/-/g, '.') ?? '-' },
   ]
-
   return (
     <div className="space-y-8">
       {/* 헤더 - 카드 밖 */}
@@ -70,19 +80,20 @@ function MypageContent() {
       </div>
 
       {/* 카드 1: 프로필 + 개인정보 */}
-      <Card padding="none" elevation="sm" className="px-10 py-[52px]">
+      <Card padding="none" elevation="sm" className="px-10 py-13">
         {/* 프로필 섹션 */}
-        <section className="mb-[52px] border-b border-gray-200 pb-[52px]">
-          <h2 className="text-primary-600 mb-[52px] text-xl leading-[140%] font-semibold tracking-[-0.03em]">
+        <section className="mb-13 border-b border-gray-200 pb-13">
+          <h2 className="text-primary-600 mb-5 border-b border-gray-200 pb-5 text-xl leading-[140%] font-semibold tracking-[-0.03em]">
             프로필
           </h2>
 
           {/* 프로필 이미지 (중앙) */}
-          <div className="mb-[44px] flex flex-col items-center">
+          <div className="mb-11 flex flex-col items-center">
             <Avatar
-              src={me.profile_img_url}
+              src={user?.profileImage}
               alt={me.nickname}
-              className="h-[184px] w-[184px] text-6xl"
+              className="h-46 w-46 text-6xl"
+              fallback={<ProfileIcon size={184} />}
             />
           </div>
 
@@ -96,7 +107,7 @@ function MypageContent() {
 
         {/* 개인 정보 섹션 */}
         <section>
-          <h2 className="text-primary-600 mb-[52px] text-xl leading-[140%] font-semibold tracking-[-0.03em]">
+          <h2 className="text-primary-600 mb-13 text-xl leading-[140%] font-semibold tracking-[-0.03em]">
             개인 정보
           </h2>
 
@@ -109,51 +120,17 @@ function MypageContent() {
       </Card>
 
       {/* 카드 2: 수강 중인 과정 */}
-      <Card padding="none" elevation="sm" className="px-11 py-[52px]">
-        <h2 className="text-primary-600 mb-[52px] border-b border-gray-200 pb-[52px] text-xl leading-[140%] font-semibold tracking-[-0.03em]">
+      <Card padding="none" elevation="sm" className="px-11 py-13">
+        <h2 className="text-primary-600 mb-13 border-b border-gray-200 pb-13 text-xl leading-[140%] font-semibold tracking-[-0.03em]">
           수강 중인 과정
         </h2>
 
-        {firstCourse ? (
-          <div className="flex items-center justify-between gap-6">
-            {/* 텍스트 (왼쪽) */}
-            <div className="flex-1">
-              <h3 className="text-lg leading-[140%] font-semibold tracking-[-0.03em] text-gray-900">
-                {firstCourse.course.name} &lt; {firstCourse.cohort.number}기
-                &gt;
-              </h3>
-            </div>
-
-            {/* 썸네일 (오른쪽) */}
-            <div className="flex h-[163px] w-[163px] flex-shrink-0 items-center justify-center rounded bg-gray-100">
-              {firstCourse.course.thumbnail_img_url ? (
-                <img
-                  src={firstCourse.course.thumbnail_img_url}
-                  alt={firstCourse.course.name}
-                  width={163}
-                  height={163}
-                  className="h-full w-full rounded object-cover"
-                />
-              ) : (
-                <svg width="163" height="163" viewBox="0 0 163 163">
-                  <pattern
-                    id="checkerboard"
-                    x="0"
-                    y="0"
-                    width="16"
-                    height="16"
-                    patternUnits="userSpaceOnUse"
-                  >
-                    <rect width="8" height="8" fill="#E5E7EB" />
-                    <rect x="8" y="0" width="8" height="8" fill="#F3F4F6" />
-                    <rect x="0" y="8" width="8" height="8" fill="#F3F4F6" />
-                    <rect x="8" y="8" width="8" height="8" fill="#E5E7EB" />
-                  </pattern>
-                  <rect width="163" height="163" fill="url(#checkerboard)" />
-                </svg>
-              )}
-            </div>
-          </div>
+        {me.role === 'STUDENT' ? (
+          <MypageErrorBoundary>
+            <Suspense fallback={<Spinner size="md" />}>
+              <MypageEnrolledCourses />
+            </Suspense>
+          </MypageErrorBoundary>
         ) : (
           <p className="text-sm text-gray-400">수강 중인 과정이 없습니다</p>
         )}
@@ -177,7 +154,7 @@ function MypageContent() {
           </div>
 
           {/* 오른쪽: 버튼 */}
-          <div className="flex-shrink-0">
+          <div className="flex shrink-0">
             <Button
               variant="secondary"
               size="md"

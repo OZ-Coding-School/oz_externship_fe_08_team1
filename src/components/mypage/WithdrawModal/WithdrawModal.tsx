@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Modal, Dropdown, Button } from '@/components'
+import { PasswordInput } from '@/components/common/PasswordInput'
 import { useWithdraw, WITHDRAW_REASONS } from '@/features/accounts/me'
 import type { WithdrawReason } from '@/features/accounts/me'
 import { useAuthStore } from '@/stores/authStore'
@@ -17,12 +18,14 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
 
   const [reason, setReason] = useState<WithdrawReason | ''>('')
   const [reasonDetail, setReasonDetail] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isConfirming, setIsConfirming] = useState(false)
 
   function handleClose() {
     setReason('')
     setReasonDetail('')
+    setPassword('')
     setError('')
     setIsConfirming(false)
     onClose()
@@ -33,16 +36,12 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
   }
 
   function handleWithdrawConfirm() {
-    if (!reason) return
+    if (!reason || !password) return
     setError('')
     withdraw.mutate(
-      {
-        reason,
-        reason_detail: reasonDetail || undefined,
-      },
+      { password },
       {
         onSuccess: () => {
-          localStorage.removeItem('accessToken')
           useAuthStore.getState().logout()
           navigate(ROUTES.AUTH.LOGIN)
         },
@@ -66,6 +65,14 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
         description="탈퇴 후에는 모든 데이터가 삭제되며 복구할 수 없습니다."
         bodyClassName="overflow-visible min-h-[380px] flex flex-col pt-8"
       >
+        <div className="mt-2">
+          <PasswordInput
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호를 입력해주세요."
+          />
+        </div>
+
         {error && <p className="text-error mt-2 text-xs">*{error}</p>}
 
         <div className="mt-auto flex gap-3">
@@ -84,6 +91,7 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
             size="md"
             onClick={handleWithdrawConfirm}
             loading={withdraw.isPending}
+            disabled={!password}
           >
             최종 탈퇴
           </Button>

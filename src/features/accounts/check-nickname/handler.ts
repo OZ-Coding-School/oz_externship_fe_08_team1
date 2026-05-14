@@ -15,7 +15,7 @@ export const checkNicknameHandlers = [
     }
 
     return HttpResponse.json<CheckNicknameResponse>({
-      detail: '사용 가능한 닉네임입니다.',
+      nickname,
     })
   }),
 ]

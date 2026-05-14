@@ -10,7 +10,7 @@ const navItems = [
 
 export function MypageLayout() {
   return (
-    <div className="mx-auto w-[944px] py-[108px]">
+    <div className="mx-auto w-236 py-27">
       <div className="flex gap-12">
         {/* 사이드바 */}
         <nav className="flex shrink-0 flex-col gap-4">

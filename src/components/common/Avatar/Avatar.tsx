@@ -1,3 +1,5 @@
+import React from 'react'
+
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl'
 
 export interface AvatarProps {
@@ -6,6 +8,8 @@ export interface AvatarProps {
   size?: AvatarSize
   /** Fallback single character (auto-derived from alt if omitted) */
   initials?: string
+  /** Custom fallback element shown when src is absent (overrides initials) */
+  fallback?: React.ReactNode
   className?: string
 }
 
@@ -28,6 +32,7 @@ export function Avatar({
   alt,
   size = 'md',
   initials,
+  fallback,
   className = '',
 }: AvatarProps) {
   const letters = deriveInitials(alt, initials)
@@ -39,7 +44,7 @@ export function Avatar({
       className={[
         'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold select-none',
         sizeClasses[size],
-        !src ? 'bg-primary-100 text-primary-700' : '',
+        !src && !fallback ? 'bg-primary-100 text-primary-700' : '',
         className,
       ]
         .filter(Boolean)
@@ -52,6 +57,8 @@ export function Avatar({
           aria-hidden="true"
           className="h-full w-full object-cover"
         />
+      ) : fallback ? (
+        fallback
       ) : (
         <span aria-hidden="true">{letters}</span>
       )}

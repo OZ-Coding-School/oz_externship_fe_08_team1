@@ -3,5 +3,5 @@ export interface CheckNicknameRequest {
 }
 
 export interface CheckNicknameResponse {
-  detail: string
+  nickname: string
 }

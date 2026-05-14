@@ -4,7 +4,7 @@ import { meHandlers } from '@/features/accounts/me'
 import { meEnrolledCoursesHandlers } from '@/features/accounts/me-enrolled-courses'
 import { checkCodeHandlers } from '@/features/exams/deployment-check-code'
 import { checkNicknameHandlers } from '@/features/accounts/check-nickname'
-import { meProfileImageHandlers } from '@/features/accounts/me-profile-image'
+// import { meProfileImageHandlers } from '@/features/accounts/me-profile-image'
 import { deploymentDetailHandlers } from '@/features/exams/deployment-detail'
 import { deploymentStatusHandlers } from '@/features/exams/deployment-status'
 import { submissionsHandlers } from '@/features/exams/submissions'
@@ -28,7 +28,7 @@ export const handlers = [
   ...deploymentStatusHandlers,
   ...checkCodeHandlers,
   ...checkNicknameHandlers,
-  ...meProfileImageHandlers,
+  // ...meProfileImageHandlers,
   ...deploymentDetailHandlers,
   ...submissionsHandlers,
   // ...logoutHandlers,

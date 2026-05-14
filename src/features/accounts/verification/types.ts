@@ -9,6 +9,7 @@ export interface SendSmsResponse {
 
 export interface VerifySmsRequest {
   phone_number: string
+  purpose: 'signup' | 'find_email' | 'phone_change'
   code: string
 }
 

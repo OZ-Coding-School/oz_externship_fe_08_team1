@@ -13,40 +13,14 @@ import {
   useUpdateProfileImage,
 } from '@/features/accounts/me-profile-image'
 import { formatPhone } from '@/utils/formatPhone'
-
-function CameraIcon() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="20" cy="20" r="20" className="fill-primary" />
-      <path
-        d="M16.5 13L15 15H12C11.17 15 10.5 15.67 10.5 16.5V26.5C10.5 27.33 11.17 28 12 28H28C28.83 28 29.5 27.33 29.5 26.5V16.5C29.5 15.67 28.83 15 28 15H25L23.5 13H16.5Z"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle
-        cx="20"
-        cy="21.5"
-        r="3.5"
-        stroke="white"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
+import { useAuthStore } from '@/stores/authStore'
+import { ProfileIcon } from '@/components/layout/Header/icons'
+import { Camera } from 'lucide-react'
 
 function MypageEditContent() {
   const navigate = useNavigate()
   const { data: me } = useMe()
+  const { user } = useAuthStore()
   const updateMe = useUpdateMe()
   const checkNickname = useCheckNickname()
   const getPresignedUrl = useGetPresignedUrl()
@@ -72,7 +46,7 @@ function MypageEditContent() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
 
-  // Critical 1: Object URL 메모리 누수 방지
+  // Object URL 메모리 누수 방지 — imagePreview 변경 시 이전 URL 해제
   useEffect(() => {
     return () => {
       if (imagePreview) URL.revokeObjectURL(imagePreview)
@@ -94,43 +68,61 @@ function MypageEditContent() {
     fileInputRef.current?.click()
   }
 
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+  // const profileImageUrl =
+  //   import.meta.env.VITE_PROFILE_IMAGE_URL + '/accounts/me/profile-image'
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    // Critical 1: 이전 Object URL 해제
-    if (imagePreview) URL.revokeObjectURL(imagePreview)
+    if (file.size > MAX_IMAGE_SIZE) {
+      setSaveError('이미지 크기는 5MB 이하만 업로드 가능합니다.')
+      return
+    }
+    // URL 해제는 useEffect cleanup에서 처리
     setImageFile(file)
     setImagePreview(URL.createObjectURL(file))
   }
 
   async function handleSave() {
+    const isNicknameChanged = nickname !== me.nickname
+    if (isNicknameChanged && nicknameStatus !== 'valid') {
+      setSaveError('닉네임 중복확인을 먼저 진행해주세요.')
+      return
+    }
     setSaveError(null)
     setIsSaving(true)
     try {
       // 1. Upload profile image if selected
       if (imageFile) {
-        const presigned = await getPresignedUrl.mutateAsync({
+        // 1-1. Presigned URL 발급 (PUT)
+        const { presigned_url, img_url } = await getPresignedUrl.mutateAsync({
           file_name: imageFile.name,
         })
-        const uploadRes = await fetch(presigned.presigned_url, {
+
+        console.log('Presigned URL:', presigned_url)
+        // 1-2. S3에 실제 파일 업로드 (axios 미사용 — Authorization 헤더 제외)
+        const uploadRes = await fetch(presigned_url, {
           method: 'PUT',
           body: imageFile,
+          headers: { 'Content-Type': imageFile.type },
         })
         if (!uploadRes.ok) {
           throw new Error(`이미지 업로드 실패: ${uploadRes.status}`)
         }
+        // 1-3. DB에 이미지 URL 저장
         await updateProfileImage.mutateAsync({
-          profile_img_url: presigned.img_url,
+          profile_img_url: img_url,
         })
       }
 
-      // 2. Update user info
-      await updateMe.mutateAsync({ nickname })
+      // 2. Update user info (닉네임 변경 시에만)
+      if (isNicknameChanged) {
+        await updateMe.mutateAsync({ nickname })
+      }
 
       // 3. Navigate back
       navigate(ROUTES.MYPAGE.HOME)
     } catch {
-      // Critical 3: 에러 피드백
       setSaveError('저장에 실패했습니다. 다시 시도해주세요.')
     } finally {
       setIsSaving(false)
@@ -158,20 +150,21 @@ function MypageEditContent() {
       {saveError && <p className="text-error text-sm">{saveError}</p>}
 
       {/* Card */}
-      <Card padding="none" elevation="sm" className="px-10 py-[52px]">
+      <Card padding="none" elevation="sm" className="px-10 py-13">
         {/* Profile Edit Section */}
-        <section className="mb-[52px] border-b border-gray-200 pb-[52px]">
+        <section className="mb-13 border-b border-gray-200 pb-13">
           <h2 className="text-primary-600 mb-5 border-b border-gray-200 pb-5 text-xl leading-[140%] font-semibold tracking-[-0.03em]">
             프로필 수정
           </h2>
 
           {/* Avatar with camera overlay */}
-          <div className="mb-[44px] flex flex-col items-center">
+          <div className="mb-11 flex flex-col items-center">
             <div className="relative">
               <Avatar
-                src={imagePreview ?? me.profile_img_url}
+                src={imagePreview ?? user?.profileImage}
                 alt={me.nickname}
-                className="h-[184px] w-[184px] text-6xl"
+                className="h-46 w-46 text-6xl"
+                fallback={<ProfileIcon size={184} />}
               />
               <button
                 type="button"
@@ -179,12 +172,14 @@ function MypageEditContent() {
                 className="absolute right-1 bottom-1 cursor-pointer rounded-full"
                 aria-label="프로필 이미지 변경"
               >
-                <CameraIcon />
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-gray-300">
+                  <Camera color="#cecece" size={35} fill="white" />
+                </div>
               </button>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp"
                 onChange={handleFileChange}
                 className="hidden"
               />
@@ -275,7 +270,7 @@ function MypageEditContent() {
                 {(['M', 'F'] as const).map((g) => (
                   <div
                     key={g}
-                    className={`flex h-[42px] w-20 cursor-default items-center justify-center rounded-full text-base font-semibold select-none ${
+                    className={`flex h-10.5 w-20 cursor-default items-center justify-center rounded-full text-base font-semibold select-none ${
                       gender === g
                         ? 'bg-primary-100 text-primary-600'
                         : 'bg-bg-muted text-text-muted'

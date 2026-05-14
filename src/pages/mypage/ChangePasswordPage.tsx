@@ -91,7 +91,7 @@ export function ChangePasswordPage() {
         비밀번호 변경
       </h1>
 
-      <Card padding="none" elevation="sm" className="px-10 py-[52px]">
+      <Card padding="none" elevation="sm" className="px-10 py-13">
         <form onSubmit={handleSubmit} className="space-y-5">
           <PasswordField
             htmlFor="old-password"

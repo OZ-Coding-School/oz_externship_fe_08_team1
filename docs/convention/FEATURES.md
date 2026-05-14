@@ -26,8 +26,8 @@ src/features/
 | logout/              | `/api/v1/accounts/logout`                  | POST             |
 | signup/              | `/api/v1/accounts/signup`                  | POST             |
 | social-login/        | `/api/v1/accounts/social-login/{provider}` | GET              |
-| me/                  | `/api/v1/accounts/me`                      | GET, PUT, DELETE |
-| me-profile-image/    | `/api/v1/accounts/me/profile-image`        | PUT              |
+| me/                  | `/api/v1/accounts/me`                      | GET, PATCH, DELETE |
+| me-profile-image/    | `/api/v1/accounts/me/profile-image`        | PATCH (URL 저장), PUT (presigned-url 발급) |
 | me-enrolled-courses/ | `/api/v1/accounts/me/enrolled-courses`     | GET              |
 | me-refresh/          | `/api/v1/accounts/me/refresh`              | POST             |
 | change-password/     | `/api/v1/accounts/change-password`         | POST             |

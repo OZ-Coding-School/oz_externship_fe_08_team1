@@ -1,3 +1,6 @@
+export type UserRole = 'USER' | 'STUDENT' | 'ADMIN'
+export type UserPosition = 'TA' | 'OM' | 'LC' | 'ENROLLED'
+
 // 사용자 정보 응답 타입 (실제 API 명세서 기준)
 export interface MeResponse {
   id: number
@@ -5,10 +8,12 @@ export interface MeResponse {
   nickname: string
   name: string
   phone_number: string
-  birthday: string
-  gender: 'M' | 'F'
+  birthday: string | null
+  gender: 'M' | 'F' | null
   profile_img_url: string | null
   cohort_id: number | null
+  role: UserRole
+  position: UserPosition | null
   created_at: string
 }
 
@@ -24,12 +29,17 @@ export interface MeUpdateResponse {
   email: string
   nickname: string
   name: string
-  birthday: string
-  gender: 'M' | 'F'
+  birthday: string | null
+  gender: 'M' | 'F' | null
   phone_number: string
   updated_at: string
 }
 
+export interface WithdrawRequest {
+  password: string
+}
+
+// UI 전용: 탈퇴 사유 (API에 전송하지 않음)
 export type WithdrawReason =
   | 'FOUND_BETTER_SERVICE'
   | 'GRADUATION'
@@ -42,11 +52,6 @@ export type WithdrawReason =
   | 'TECHNICAL_ISSUES'
   | 'TOO_DIFFICULT'
   | 'TRANSFER'
-
-export interface WithdrawRequest {
-  reason: WithdrawReason
-  reason_detail?: string
-}
 
 export const WITHDRAW_REASONS = [
   { value: 'LACK_OF_CONTENT', label: '원하는 종류의 강의가 없어서' },

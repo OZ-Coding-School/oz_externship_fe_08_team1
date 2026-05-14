@@ -9,7 +9,7 @@ export interface PresignedUrlResponse {
 }
 
 export interface ProfileImageUpdateRequest {
-  profile_img_url: string
+  profile_img_url: string | null
 }
 
 export interface ProfileImageUpdateResponse {

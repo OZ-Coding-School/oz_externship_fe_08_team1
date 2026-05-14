@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import logoImg from '@/assets/logo.png'
 import { ROUTES } from '@/constants/routes'
@@ -8,7 +8,6 @@ import { ProfileDropdown } from './ProfileDropdown'
 import { EnrollStudentModal } from './EnrollStudentModal'
 import { useAuthStore } from '@/stores/authStore'
 import { useLogout } from '@/features/accounts/logout'
-import { meEnrolledCoursesQueries } from '@/features/accounts/me-enrolled-courses'
 
 export interface HeaderProps {
   bannerText?: string
@@ -24,11 +23,7 @@ export function Header({
   const { isAuthenticated, isLoading, user, logout } = useAuthStore()
   const { mutate: logoutApi } = useLogout()
 
-  const { data: enrolledCourses } = useQuery({
-    ...meEnrolledCoursesQueries.list(),
-    enabled: isAuthenticated,
-  })
-  const isEnrolled = (enrolledCourses?.length ?? 0) > 0
+  const isEnrolled = user?.role === 'USER'
 
   return (
     <>
