@@ -29,6 +29,7 @@ const processQueue = (error: unknown, token: string | null) => {
 export function setupInterceptors(instance: AxiosInstance): void {
   instance.interceptors.request.use(
     (config) => {
+      if (config.url === REFRESH_URL) return config
       const token = useAuthStore.getState().accessToken
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
