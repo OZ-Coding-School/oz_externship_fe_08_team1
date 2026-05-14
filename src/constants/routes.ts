@@ -29,4 +29,6 @@ export const ROUTES = {
   COMMUNITY: {
     LIST: '/community',
   },
+
+  ENROLL: '/enroll',
 } as const

@@ -6,6 +6,7 @@ import { LoginPage, SocialCallbackPage } from '@/pages/auth'
 import { SignupSelectPage, SignupPage } from '@/pages/signup'
 import { MypagePage, MypageEditPage, ChangePasswordPage } from '@/pages/mypage'
 import { QuizListPage, QuizExamPage, QuizResultPage } from '@/pages/quiz'
+import { EnrollPage } from '@/pages/enroll'
 import { ComponentShowcase } from '@/pages/ComponentShowcase'
 import { ProtectedRoute } from '@/components/common/ProtectedRoute'
 
@@ -58,6 +59,15 @@ export function RouterProvider() {
           <Route path="change-password" element={<ChangePasswordPage />} />
           <Route path="quiz" element={<QuizListPage />} />
         </Route>
+
+        <Route
+          path="enroll"
+          element={
+            <ProtectedRoute>
+              <EnrollPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="showcase" element={<ComponentShowcase />} />
       </Route>
