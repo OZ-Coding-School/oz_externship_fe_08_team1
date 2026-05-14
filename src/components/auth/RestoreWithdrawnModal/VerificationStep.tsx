@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Check, RotateCw } from 'lucide-react'
 import { Modal, Input, Button } from '@/components'
-import { useAccountRestoreFlow } from './useAccountRestoreFlow'
+import { useAccountRestoreFlow } from '@/hooks/account-restore/useAccountRestoreFlow'
 
 interface VerificationStepProps {
   isOpen: boolean
@@ -111,7 +111,7 @@ export function VerificationStep({
         closeOnOverlayClick={false}
         maxWidth="max-w-[396px] max-h-[437px]"
       >
-        <div className="relative pt-[50px]">
+        <div className="relative pt-12.5">
           <div className="mb-6 flex flex-col items-center text-center">
             <div className="bg-primary-300 flex h-8 w-8 items-center justify-center rounded-full">
               <RotateCw size={20} className="text-primary" />

@@ -2,8 +2,8 @@ import { useState, useCallback } from 'react'
 import axios from 'axios'
 import { useRestoreAccount } from '@/features/accounts/restore'
 import { useToastStore } from '@/stores/toastStore'
-import { useRecoveryEmailCodeFlow } from './useRecoveryEmailCodeFlow'
-import type { UseRecoveryEmailCodeFlowReturn } from './useRecoveryEmailCodeFlow'
+import { useRecoveryEmailCodeFlow } from '@/hooks/account-restore/useRecoveryEmailCodeFlow'
+import type { UseRecoveryEmailCodeFlowReturn } from '@/hooks/account-restore/useRecoveryEmailCodeFlow'
 
 export interface UseAccountRestoreFlowReturn extends UseRecoveryEmailCodeFlowReturn {
   showSuccess: boolean

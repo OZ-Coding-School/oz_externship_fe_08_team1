@@ -27,7 +27,7 @@ export function RestoreModal({
       onClose={onClose}
       maxWidth="max-w-[396px] max-h-[437px]"
     >
-      <div className="flex flex-col items-center gap-10 pt-[50px] pb-2">
+      <div className="flex flex-col items-center gap-10 pt-12.5 pb-2">
         <div className="flex flex-col items-center gap-4">
           {icon && (
             <div className="bg-primary-300 flex h-8 w-8 items-center justify-center rounded-full">
