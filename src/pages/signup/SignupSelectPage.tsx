@@ -41,7 +41,7 @@ export function SignupSelectPage() {
           onClick={() => navigate(ROUTES.SIGNUP.FORM)}
           className="text-sm text-gray-600 hover:text-gray-900"
         >
-          일반로그인
+          일반 회원가입
         </button>
       </div>
     </main>
