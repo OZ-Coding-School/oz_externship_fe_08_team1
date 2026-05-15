@@ -1,12 +1,12 @@
 import { Modal } from './Modal'
-import { MehFaceIcon } from './icons'
+import { Button } from '../Button/Button'
 
 export interface RestoreModalProps {
   isOpen: boolean
   onClose: () => void
+  icon?: React.ReactNode
   title: string
   description: string
-  /** 삭제 예정일 등 추가 안내 */
   buttonLabel?: string
   onRestore?: () => void
 }
@@ -15,40 +15,37 @@ export interface RestoreModalProps {
 export function RestoreModal({
   isOpen,
   onClose,
+  icon,
   title,
   description,
   buttonLabel = '계정 다시 사용하기',
   onRestore,
 }: RestoreModalProps) {
-  const handleRestore = () => {
-    onRestore?.()
-  }
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col items-center gap-10">
-        {/* Icon */}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidth="max-w-[396px] max-h-[437px]"
+    >
+      <div className="flex flex-col items-center gap-10 pt-12.5 pb-2">
         <div className="flex flex-col items-center gap-4">
-          <div className="bg-primary-300 flex h-7 w-7 items-center justify-center rounded-full">
-            <MehFaceIcon />
-          </div>
-          <div className="flex flex-col items-center gap-4 text-center">
-            <h2 className="text-xl font-bold tracking-tight text-gray-900">
+          {icon && (
+            <div className="bg-primary-300 flex h-8 w-8 items-center justify-center rounded-full">
+              {icon}
+            </div>
+          )}
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h2 className="text-xl leading-[140%] font-bold tracking-tight text-gray-900">
               {title}
             </h2>
-            <p className="text-sm leading-relaxed tracking-tight whitespace-pre-line text-gray-600">
+            <p className="text-sm leading-[140%] tracking-tight whitespace-pre-line text-gray-600">
               {description}
             </p>
           </div>
         </div>
-
-        {/* CTA */}
-        <button
-          onClick={handleRestore}
-          className="bg-primary text-primary-100 hover:bg-primary-700 focus-visible:ring-primary mb-4 h-[52px] w-full rounded-sm text-base font-normal tracking-tight transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-        >
-          {buttonLabel}
-        </button>
+        <Button variant="primary" fullWidth size="md" onClick={onRestore}>
+          <span className="font-normal">{buttonLabel}</span>
+        </Button>
       </div>
     </Modal>
   )

@@ -51,18 +51,18 @@ export function Header({
               </button>
 
               <nav className="flex items-center gap-15">
-                <a
-                  href="https://community.ozcodingschool.site/"
+                <button
+                  onClick={() => navigate(ROUTES.COMMUNITY.LIST)}
                   className="hover:text-primary px-2.5 py-2.5 text-lg tracking-tight text-gray-900 transition-colors duration-150"
                 >
                   커뮤니티
-                </a>
-                <a
-                  href="https://qna.ozcodingschool.site/"
+                </button>
+                <button
+                  onClick={() => navigate(ROUTES.QNA.LIST)}
                   className="hover:text-primary px-2.5 py-2.5 text-lg tracking-tight text-gray-900 transition-colors duration-150"
                 >
                   질의응답
-                </a>
+                </button>
               </nav>
             </div>
 
