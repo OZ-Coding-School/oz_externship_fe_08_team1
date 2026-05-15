@@ -74,7 +74,7 @@ const mockSubmissionDetail: SubmissionDetailResponse = {
       id: 5,
       question: '다음 문장의 빈칸을 채우시오.',
       prompt:
-        '자바스크립트에서 [blank]는 값이 없음을 의미하고, [blank]는 존재하지 않음을 의미한다.',
+        '자바스크립트에서 __는 값이 없음을 의미하고, __는 존재하지 않음을 의미한다.',
       blank_count: 2,
       options: null,
       type: 'fill_blank',

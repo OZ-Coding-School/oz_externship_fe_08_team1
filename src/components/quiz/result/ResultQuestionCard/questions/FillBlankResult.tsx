@@ -11,7 +11,7 @@ export function FillBlankResult({
   answer: string[]
   submittedAnswer: string[]
 }) {
-  const segments = prompt.split('[blank]')
+  const segments = prompt.split('__')
 
   return (
     <div className="flex max-w-[648px] flex-col gap-4">
@@ -22,7 +22,7 @@ export function FillBlankResult({
             <span key={`${i}-${segment}`}>
               {segment}
               {i < segments.length - 1 && (
-                <span className="font-semibold text-gray-800">
+                <span className="inline-block font-semibold whitespace-nowrap text-gray-800">
                   ({indexToLetter(i)}) ______
                 </span>
               )}

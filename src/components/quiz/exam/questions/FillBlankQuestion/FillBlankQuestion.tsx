@@ -11,7 +11,7 @@ export function FillBlankQuestion({
   answer,
   onChange,
 }: FillBlankQuestionProps) {
-  const segments = prompt.split('[blank]')
+  const segments = prompt.split('__')
 
   const handleChange = (index: number, value: string) => {
     const next = [...answer]
@@ -28,7 +28,7 @@ export function FillBlankQuestion({
             <span key={i}>
               {segment}
               {i < segments.length - 1 && (
-                <strong className="font-bold">
+                <strong className="inline-block font-bold whitespace-nowrap">
                   ({indexToLetter(i)}) ________
                 </strong>
               )}

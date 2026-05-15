@@ -11,7 +11,7 @@ export const checkCodeHandlers = [
       const body = (await request.json()) as { code: string }
 
       // 성공
-      if (body.code === 'ABC123') {
+      if (body.code === 'ABC12345') {
         return new HttpResponse(null, { status: 204 })
       }
 

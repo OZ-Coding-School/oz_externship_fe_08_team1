@@ -15,7 +15,11 @@ export function MultipleChoiceQuestion({
     if (answer.includes(option)) {
       onChange(answer.filter((a) => a !== option))
     } else {
-      onChange([...answer, option])
+      onChange(
+        [...answer, option].sort(
+          (a, b) => options.indexOf(a) - options.indexOf(b)
+        )
+      )
     }
   }
 

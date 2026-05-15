@@ -1,7 +1,7 @@
 /** GET /api/v1/exams/deployments 쿼리 파라미터 */
 export interface DeploymentsParams {
   page?: number
-  status?: 'all' | 'done' | 'pending'
+  status?: 'done' | 'pending'
 }
 
 export interface DeploymentSubject {

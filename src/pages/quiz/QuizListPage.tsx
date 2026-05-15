@@ -31,7 +31,7 @@ function QuizListSkeleton() {
 }
 
 export function QuizListPage() {
-  const [status, setStatus] = useState<TabStatus>('all')
+  const [status, setStatus] = useState<TabStatus>(QUIZ_STATUS.ALL)
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,7 +52,9 @@ export function QuizListPage() {
           <TabPanel key={value} value={value} className="pt-6">
             <QuizListErrorBoundary>
               <Suspense fallback={<QuizListSkeleton />}>
-                <QuizList params={{ status: value }} />
+                <QuizList
+                  params={value !== QUIZ_STATUS.ALL ? { status: value } : {}}
+                />
               </Suspense>
             </QuizListErrorBoundary>
           </TabPanel>

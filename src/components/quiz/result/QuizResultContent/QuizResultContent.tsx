@@ -24,7 +24,10 @@ export function QuizResultContent({ submissionId }: QuizResultContentProps) {
         elapsedTime={elapsed_time}
         score={score}
         totalScore={total_score}
-        onBack={() => navigate(ROUTES.MYPAGE.QUIZ)}
+        onBack={() => {
+          window.scrollTo(0, 0)
+          navigate(ROUTES.MYPAGE.QUIZ)
+        }}
       />
 
       <div className="bg-primary-100">
@@ -51,7 +54,10 @@ export function QuizResultContent({ submissionId }: QuizResultContentProps) {
             variant="primary"
             size="md"
             className="px-12"
-            onClick={() => navigate(ROUTES.MYPAGE.QUIZ)}
+            onClick={() => {
+              window.scrollTo(0, 0)
+              navigate(ROUTES.MYPAGE.QUIZ)
+            }}
           >
             완료
           </Button>

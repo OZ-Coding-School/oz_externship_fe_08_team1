@@ -4,11 +4,18 @@ export function OrderingResult({
   options,
   answer,
   submittedAnswer,
+  isCorrect,
 }: {
   options: string[]
   answer: string[]
   submittedAnswer: string[]
+  isCorrect: boolean
 }) {
+  const toLetter = (item: string) => {
+    const idx = options.indexOf(item)
+    return idx >= 0 ? indexToLetter(idx) : '?'
+  }
+
   return (
     <div className="flex max-w-[648px] flex-col gap-4">
       {/* 선택지 목록 */}
@@ -25,22 +32,31 @@ export function OrderingResult({
         ))}
       </div>
 
-      {/* 제출된 순서 슬롯: 정답과 일치 여부에 따라 색상 표시 */}
+      {/* 제출 순서 슬롯: 위치별 정오 색상 */}
       <div className="flex flex-wrap gap-[10px]">
-        {submittedAnswer.map((item, i) => {
-          const isCorrectPos = item === answer[i]
-          const letterIdx = options.indexOf(item)
-          const letter = letterIdx >= 0 ? indexToLetter(letterIdx) : '?'
-          return (
-            <div
-              key={`${i}-${item}`}
-              className={`bg-disable flex h-[62px] w-[62px] items-center justify-center rounded text-xl font-bold tracking-[-0.03em] ${isCorrectPos ? 'text-success-dark' : 'text-error'}`}
-            >
-              {letter}
-            </div>
-          )
-        })}
+        {submittedAnswer.map((item, i) => (
+          <div
+            key={`submitted-${i}`}
+            className={`bg-disable flex h-[62px] w-[62px] items-center justify-center rounded text-xl font-bold tracking-[-0.03em] ${item === answer[i] ? 'text-success-dark' : 'text-error'}`}
+          >
+            {toLetter(item)}
+          </div>
+        ))}
       </div>
+
+      {/* 오답일 때만: 정답 순서 슬롯 초록색으로 표시 */}
+      {!isCorrect && (
+        <div className="flex flex-wrap gap-[10px]">
+          {answer.map((item, i) => (
+            <div
+              key={`answer-${i}`}
+              className="bg-disable text-success-dark flex h-[62px] w-[62px] items-center justify-center rounded text-xl font-bold tracking-[-0.03em]"
+            >
+              {toLetter(item)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

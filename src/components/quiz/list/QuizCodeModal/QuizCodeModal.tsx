@@ -11,7 +11,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { getErrorDetail } from '@/utils/getErrorDetail'
 import { getErrorStatus } from '@/utils/getErrorStatus'
 
-const BASE62_REGEX = /^[0-9a-zA-Z]{6}$/
+const BASE62_REGEX = /^[0-9a-zA-Z]{8}$/
 
 // 401은 axios 인터셉터가 토큰 갱신 후 로그인 리다이렉트 처리
 const TOAST_ERROR_MESSAGES: Partial<Record<number, string>> = {
@@ -25,7 +25,7 @@ interface QuizCodeModalProps {
   onClose: () => void
   deploymentId: number
   examTitle: string
-  thumbnailUrl: string
+  thumbnailUrl: string | null
   questionCount: number
   durationTime: number
 }
@@ -59,7 +59,7 @@ export function QuizCodeModal({
     }
 
     if (!BASE62_REGEX.test(code)) {
-      setInputError('6자리 영문/숫자 코드를 입력해주세요.')
+      setInputError('8자리 영문/숫자 코드를 입력해주세요.')
       return
     }
 
@@ -111,8 +111,8 @@ export function QuizCodeModal({
       <div className="flex flex-col gap-6">
         <Input
           label="참가 코드입력"
-          placeholder="6자리를 입력해주세요"
-          maxLength={6}
+          placeholder="8자리를 입력해주세요"
+          maxLength={8}
           value={code}
           isError={!!inputError}
           errorMessage={inputError ?? undefined}

@@ -19,10 +19,14 @@ export function ResultHeader({
   totalScore,
   onBack,
 }: ResultHeaderProps) {
+  const minutes = Math.floor(elapsedTime / 60)
+  const seconds = elapsedTime % 60
+  const elapsedText = minutes > 0 ? `${minutes}분 ${seconds}초` : `${seconds}초`
+
   const statsText = [
     `총 문항 수: ${totalQuestions}`,
     `부정행위: ${cheatingCount}회`,
-    `응시시간: ${elapsedTime}분`,
+    `응시시간: ${elapsedText}`,
     `응시 결과 점수: ${score}점/${totalScore}점`,
   ].join(' ㆍ ')
 

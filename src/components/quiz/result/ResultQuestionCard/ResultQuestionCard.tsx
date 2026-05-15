@@ -82,6 +82,7 @@ export function ResultQuestionCard({
             options={question.options}
             answer={answer}
             submittedAnswer={submitted_answer}
+            isCorrect={is_correct}
           />
         )
     }
@@ -120,14 +121,14 @@ export function ResultQuestionCard({
               <Circle
                 size={20}
                 strokeWidth={2}
-                className="text-success-dark shrink-0"
+                className="text-success-dark block shrink-0 self-center"
                 aria-hidden="true"
               />
             ) : (
               <X
                 size={20}
                 strokeWidth={3}
-                className="text-error shrink-0"
+                className="text-error block shrink-0 self-center"
                 aria-hidden="true"
               />
             )}

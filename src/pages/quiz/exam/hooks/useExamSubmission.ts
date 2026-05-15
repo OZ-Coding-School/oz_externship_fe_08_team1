@@ -73,7 +73,7 @@ export function useExamSubmission({
   // ref는 동기적으로 읽고 쓸 수 있어 즉시 중복 차단이 가능하다.
   const isSubmittingRef = useRef(false)
   // 시험 시작 시각은 마운트 시점에 한 번만 기록해야 하므로 ref로 고정
-  const startedAt = useRef(new Date().toISOString().slice(0, 19))
+  const startedAt = useRef(new Date().toISOString())
 
   const submit = useCallback(
     (reason: SubmitReason, cheatingCount: number) => {
