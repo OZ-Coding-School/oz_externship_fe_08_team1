@@ -109,7 +109,7 @@ export function VerificationStep({
         onClose={showSuccess ? finishRestoreFlow : onClose}
         hideCloseButton={showSuccess}
         closeOnOverlayClick={false}
-        maxWidth="max-w-[396px] max-h-[437px]"
+        maxWidth="max-w-[396px]"
       >
         <div className="relative pt-12.5">
           <div className="mb-6 flex flex-col items-center text-center">
