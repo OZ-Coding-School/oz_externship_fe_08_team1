@@ -12,6 +12,7 @@ import {
   useVerifySms,
 } from '@/features/accounts/signup'
 import { useCheckNickname } from '@/features/accounts/check-nickname'
+import { useToastStore } from '@/stores/toastStore'
 import logo from '@/assets/logo.png'
 
 function RequiredLabel({ children }: { children: React.ReactNode }) {
@@ -36,8 +37,17 @@ const validateBirthday = (value: string) => {
   if (month < 1 || month > 12) return '올바른 월을 입력해주세요.'
 
   const maxDays = new Date(year, month, 0).getDate()
-  if (day < 1 || day > maxDays) return `올바른 날짜가 아닙니다.`
+  if (day < 1 || day > maxDays)
+    return `${month}월은 최대 ${maxDays}일까지 입력 가능합니다.`
 
+  return ''
+}
+
+const validatePassword = (value: string) => {
+  if (!value) return ''
+  const regex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,15}$/
+  if (!regex.test(value)) return '비밀번호 조건을 확인해주세요.'
   return ''
 }
 
@@ -46,6 +56,7 @@ const validateBirthday = (value: string) => {
  */
 export function SignupPage() {
   const navigate = useNavigate()
+  const { show } = useToastStore()
 
   const [name, setName] = useState('')
   const [nickname, setNickname] = useState('')
@@ -180,7 +191,7 @@ export function SignupPage() {
       return
     }
     if (!nicknameChecked) {
-      setNicknameError('닉네임 중복확인을 해주세요.')
+      setNicknameError('닉네임 중복을 확인해주세요.')
       return
     }
     const birthdayValidation = validateBirthday(birthday)
@@ -204,6 +215,11 @@ export function SignupPage() {
       setPasswordError('비밀번호를 입력해주세요.')
       return
     }
+    const passwordValidation = validatePassword(password)
+    if (passwordValidation) {
+      setPasswordError(passwordValidation)
+      return
+    }
     if (password !== passwordConfirm) {
       setPasswordConfirmError('비밀번호가 일치하지 않습니다.')
       return
@@ -221,7 +237,7 @@ export function SignupPage() {
       },
       {
         onSuccess: () => navigate(ROUTES.AUTH.LOGIN),
-        onError: () => alert('회원가입에 실패했습니다.'),
+        onError: () => show('회원가입에 실패했습니다.'),
       }
     )
   }
@@ -506,7 +522,7 @@ export function SignupPage() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value)
-                setPasswordError('')
+                setPasswordError(validatePassword(e.target.value))
               }}
               isError={Boolean(passwordError)}
               errorMessage={passwordError}
@@ -538,7 +554,8 @@ export function SignupPage() {
               !emailVerified ||
               !smsVerified ||
               !nicknameChecked ||
-              Boolean(birthdayError)
+              Boolean(birthdayError) ||
+              Boolean(passwordError)
             }
           >
             가입하기
