@@ -37,9 +37,9 @@ export interface MeUpdateResponse {
 
 export interface WithdrawRequest {
   password: string
+  reason: WithdrawReason
 }
 
-// UI 전용: 탈퇴 사유 (API에 전송하지 않음)
 export type WithdrawReason =
   | 'FOUND_BETTER_SERVICE'
   | 'GRADUATION'

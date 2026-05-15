@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
 import { RefreshCw, Check } from 'lucide-react'
 import { Modal, Input, Button } from '@/components'
 import { useSendSms, useVerifySms } from '@/features/accounts/verification'
@@ -10,18 +10,82 @@ interface PhoneChangeModalProps {
   onClose: () => void
 }
 
+type State = {
+  phoneNumber: string
+  phoneError: string
+  code: string
+  codeError: string
+  smsSent: boolean
+  codeVerified: boolean
+  smsToken: string
+}
+
+type Action =
+  | { type: 'SET_PHONE_NUMBER'; payload: string }
+  | { type: 'SET_PHONE_ERROR'; payload: string }
+  | { type: 'SET_CODE'; payload: string }
+  | { type: 'SET_CODE_ERROR'; payload: string }
+  | { type: 'SMS_SENT' }
+  | { type: 'SMS_SEND_FAILED'; payload: string }
+  | { type: 'PREPARE_RESEND' }
+  | { type: 'CODE_VERIFIED'; payload: string }
+  | { type: 'TIMER_TIMEOUT' }
+  | { type: 'RESET' }
+
+const initialState: State = {
+  phoneNumber: '',
+  phoneError: '',
+  code: '',
+  codeError: '',
+  smsSent: false,
+  codeVerified: false,
+  smsToken: '',
+}
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'SET_PHONE_NUMBER':
+      return { ...state, phoneNumber: action.payload, phoneError: '' }
+    case 'SET_PHONE_ERROR':
+      return { ...state, phoneError: action.payload }
+    case 'SET_CODE':
+      return { ...state, code: action.payload, codeError: '' }
+    case 'SET_CODE_ERROR':
+      return { ...state, codeError: action.payload }
+    case 'SMS_SENT':
+      return { ...state, smsSent: true }
+    case 'SMS_SEND_FAILED':
+      return { ...state, phoneError: action.payload }
+    case 'PREPARE_RESEND':
+      return { ...state, code: '', codeError: '', codeVerified: false }
+    case 'CODE_VERIFIED':
+      return {
+        ...state,
+        smsToken: action.payload,
+        codeVerified: true,
+        codeError: '',
+      }
+    case 'TIMER_TIMEOUT':
+      return { ...state, smsSent: false }
+    case 'RESET':
+      return initialState
+  }
+}
+
 export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [code, setCode] = useState('')
-  const [smsToken, setSmsToken] = useState('')
-  const [smsSent, setSmsSent] = useState(false)
-  const [codeVerified, setCodeVerified] = useState(false)
-  const [phoneError, setPhoneError] = useState('')
-  const [codeError, setCodeError] = useState('')
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const {
+    phoneNumber,
+    phoneError,
+    code,
+    codeError,
+    smsSent,
+    codeVerified,
+    smsToken,
+  } = state
 
   const timer = useVerificationTimer({
-    ttlSeconds: 300,
-    onExpire: () => setSmsSent(false),
+    onExpire: () => dispatch({ type: 'TIMER_TIMEOUT' }),
   })
 
   const sendSms = useSendSms()
@@ -29,38 +93,34 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
   const changePhone = useChangePhone()
 
   function handleClose() {
-    setPhoneNumber('')
-    setCode('')
-    setSmsToken('')
-    setSmsSent(false)
+    dispatch({ type: 'RESET' })
     timer.reset()
-    setCodeVerified(false)
-    setPhoneError('')
-    setCodeError('')
     onClose()
   }
 
   function handleSendSms() {
-    const apiPhone = phoneNumber
-    if (!/^010\d{8}$/.test(apiPhone)) {
-      setPhoneError('올바른 휴대폰 번호를 입력해주세요.')
+    if (!/^010\d{8}$/.test(phoneNumber)) {
+      dispatch({
+        type: 'SET_PHONE_ERROR',
+        payload: '010으로 시작하는 11자리 번호를 입력해주세요.',
+      })
       return
     }
 
-    setPhoneError('')
-    setCode('')
-    setCodeError('')
-    setCodeVerified(false)
+    dispatch({ type: 'PREPARE_RESEND' })
 
     sendSms.mutate(
-      { phone_number: apiPhone, purpose: 'phone_change' },
+      { phone_number: phoneNumber, purpose: 'phone_change' },
       {
         onSuccess: () => {
-          setSmsSent(true)
+          dispatch({ type: 'SMS_SENT' })
           timer.start()
         },
         onError: () =>
-          setPhoneError('SMS 전송에 실패했습니다. 다시 시도해주세요.'),
+          dispatch({
+            type: 'SMS_SEND_FAILED',
+            payload: 'SMS 전송에 실패했습니다. 다시 시도해주세요.',
+          }),
       }
     )
   }
@@ -70,12 +130,14 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
       { phone_number: phoneNumber, purpose: 'phone_change', code },
       {
         onSuccess: (data) => {
-          setSmsToken(data.sms_token)
-          setCodeVerified(true)
+          dispatch({ type: 'CODE_VERIFIED', payload: data.sms_token })
           timer.stop()
-          setCodeError('')
         },
-        onError: () => setCodeError('인증번호가 일치하지 않습니다.'),
+        onError: () =>
+          dispatch({
+            type: 'SET_CODE_ERROR',
+            payload: '인증번호가 일치하지 않습니다.',
+          }),
       }
     )
   }
@@ -87,16 +149,15 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
       {
         onSuccess: () => handleClose(),
         onError: () =>
-          setCodeError('번호 변경에 실패했습니다. 다시 시도해주세요.'),
+          dispatch({
+            type: 'SET_CODE_ERROR',
+            payload: '번호 변경에 실패했습니다. 다시 시도해주세요.',
+          }),
       }
     )
   }
 
-  const smsButtonLabel = smsSent
-    ? '재전송'
-    : phoneNumber
-      ? '인증번호 받기'
-      : '변경'
+  const smsButtonLabel = smsSent ? '재전송' : '인증번호 받기'
 
   return (
     <Modal
@@ -128,10 +189,9 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
               placeholder="01012341234"
               value={phoneNumber}
               autoFocus
-              onChange={(e) => {
-                setPhoneNumber(e.target.value)
-                setPhoneError('')
-              }}
+              onChange={(e) =>
+                dispatch({ type: 'SET_PHONE_NUMBER', payload: e.target.value })
+              }
               onKeyDown={(e) => {
                 if (
                   e.key === 'Enter' &&
@@ -170,13 +230,16 @@ export function PhoneChangeModal({ isOpen, onClose }: PhoneChangeModalProps) {
           <div className="flex items-start gap-2">
             <div className="flex-1">
               <Input
+                aria-label="인증번호"
                 placeholder="인증 번호"
                 value={code}
                 inputMode="numeric"
-                onChange={(e) => {
-                  setCode(e.target.value.replace(/\D/g, ''))
-                  setCodeError('')
-                }}
+                onChange={(e) =>
+                  dispatch({
+                    type: 'SET_CODE',
+                    payload: e.target.value.replace(/\D/g, ''),
+                  })
+                }
                 onKeyDown={(e) => {
                   if (
                     e.key === 'Enter' &&

@@ -2,6 +2,7 @@ import { useMeEnrolledCourses } from '@/features/accounts/me-enrolled-courses'
 
 export function MypageEnrolledCourses() {
   const { data: enrolledCourses } = useMeEnrolledCourses()
+  // 디자인 스펙: 대표 수강 과정 1개만 표시
   const firstCourse = enrolledCourses?.[0]
 
   return (

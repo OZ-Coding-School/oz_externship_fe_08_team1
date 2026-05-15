@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { PresignedUrlResponse, ProfileImageUpdateResponse } from './types'
 
 export const meProfileImageHandlers = [
-  http.put('/accounts/me/profile-image/presigned-url', () => {
+  http.post('/accounts/me/profile-image/presigned-url', () => {
     return HttpResponse.json<PresignedUrlResponse>({
       presigned_url: '/mock/s3-upload',
       img_url: '/favicon.svg',

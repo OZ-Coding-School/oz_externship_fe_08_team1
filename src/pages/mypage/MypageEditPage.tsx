@@ -2,6 +2,8 @@
  * @figma 마이페이지_수정하기  https://www.figma.com/design/4rJmEFUU2HMWVy3qUcYZRs/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=1-5240&m=dev
  */
 import { Suspense, useEffect, useRef, useState } from 'react'
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
 import { useNavigate } from 'react-router'
 import { Card, Button, Avatar, Input, Spinner } from '@/components'
 import { MypageErrorBoundary, PhoneChangeModal } from '@/components/mypage'
@@ -53,7 +55,6 @@ function MypageEditContent() {
     }
   }, [imagePreview])
 
-  // Critical 2: check-nickname API 연동
   function handleNicknameCheck() {
     checkNickname.mutate(
       { nickname },
@@ -68,9 +69,6 @@ function MypageEditContent() {
     fileInputRef.current?.click()
   }
 
-  const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-  // const profileImageUrl =
-  //   import.meta.env.VITE_PROFILE_IMAGE_URL + '/accounts/me/profile-image'
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -99,7 +97,6 @@ function MypageEditContent() {
           file_name: imageFile.name,
         })
 
-        console.log('Presigned URL:', presigned_url)
         // 1-2. S3에 실제 파일 업로드 (axios 미사용 — Authorization 헤더 제외)
         const uploadRes = await fetch(presigned_url, {
           method: 'PUT',
@@ -182,6 +179,7 @@ function MypageEditContent() {
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleFileChange}
                 className="hidden"
+                aria-label="프로필 이미지 파일 선택"
               />
             </div>
           </div>
@@ -247,7 +245,7 @@ function MypageEditContent() {
               <div className="flex-1">
                 <Input
                   label="휴대전화"
-                  value={formatPhone(me.phone_number)}
+                  value={me.phone_number ? formatPhone(me.phone_number) : '-'}
                   readOnly
                 />
               </div>

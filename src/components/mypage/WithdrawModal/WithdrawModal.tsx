@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { Modal, Dropdown, Button } from '@/components'
 import { PasswordInput } from '@/components/common/PasswordInput'
 import { useWithdraw, WITHDRAW_REASONS } from '@/features/accounts/me'
@@ -14,6 +15,7 @@ interface WithdrawModalProps {
 
 export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const withdraw = useWithdraw()
 
   const [reason, setReason] = useState<WithdrawReason | ''>('')
@@ -39,11 +41,12 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
     if (!reason || !password) return
     setError('')
     withdraw.mutate(
-      { password },
+      { password, reason: reason as WithdrawReason },
       {
         onSuccess: () => {
           useAuthStore.getState().logout()
           navigate(ROUTES.AUTH.LOGIN)
+          queryClient.clear()
         },
         onError: () => {
           setError('회원 탈퇴에 실패했습니다. 다시 시도해주세요.')
@@ -67,6 +70,7 @@ export function WithdrawModal({ isOpen, onClose }: WithdrawModalProps) {
       >
         <div className="mt-2">
           <PasswordInput
+            aria-label="비밀번호 확인"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호를 입력해주세요."
