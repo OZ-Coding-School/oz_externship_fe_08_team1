@@ -17,6 +17,8 @@ import { useAuthStore } from '@/stores/authStore'
 import { ProfileIcon } from '@/components/layout/Header/icons'
 import { Camera } from 'lucide-react'
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
+
 function MypageEditContent() {
   const navigate = useNavigate()
   const { data: me } = useMe()
@@ -46,10 +48,13 @@ function MypageEditContent() {
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
 
-  // Object URL 메모리 누수 방지 — imagePreview 변경 시 이전 URL 해제
+  // Object URL 메모리 누수 방지 — 이전 URL을 ref로 추적하여 교체 시 해제
+  const prevPreviewRef = useRef<string | null>(null)
   useEffect(() => {
+    if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current)
+    prevPreviewRef.current = imagePreview
     return () => {
-      if (imagePreview) URL.revokeObjectURL(imagePreview)
+      if (prevPreviewRef.current) URL.revokeObjectURL(prevPreviewRef.current)
     }
   }, [imagePreview])
 
@@ -68,9 +73,6 @@ function MypageEditContent() {
     fileInputRef.current?.click()
   }
 
-  const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB
-  // const profileImageUrl =
-  //   import.meta.env.VITE_PROFILE_IMAGE_URL + '/accounts/me/profile-image'
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -99,7 +101,6 @@ function MypageEditContent() {
           file_name: imageFile.name,
         })
 
-        console.log('Presigned URL:', presigned_url)
         // 1-2. S3에 실제 파일 업로드 (axios 미사용 — Authorization 헤더 제외)
         const uploadRes = await fetch(presigned_url, {
           method: 'PUT',
@@ -182,6 +183,7 @@ function MypageEditContent() {
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleFileChange}
                 className="hidden"
+                aria-label="프로필 이미지 파일 선택"
               />
             </div>
           </div>
@@ -247,7 +249,7 @@ function MypageEditContent() {
               <div className="flex-1">
                 <Input
                   label="휴대전화"
-                  value={formatPhone(me.phone_number)}
+                  value={me.phone_number ? formatPhone(me.phone_number) : '-'}
                   readOnly
                 />
               </div>

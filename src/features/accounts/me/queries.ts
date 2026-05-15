@@ -42,13 +42,9 @@ export function useUpdateMe() {
 }
 
 export function useWithdraw() {
-  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (body: WithdrawRequest) => {
       await api.delete('accounts/withdrawal', { data: body })
-    },
-    onSuccess: () => {
-      queryClient.clear()
     },
   })
 }
