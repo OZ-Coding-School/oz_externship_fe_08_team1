@@ -21,6 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: meData.email,
             nickname: meData.nickname,
             profileImage: meData.profile_img_url,
+            role: meData.role,
           },
           useAuthStore.getState().accessToken ?? ''
         )
