@@ -183,4 +183,4 @@ pnpm test:e2e
 >
 > [📜 요구사항 정의서](https://docs.google.com/spreadsheets/d/101djfKLFrMKqzSC_E_5fZmMySo1hXaJiz0EI11R4UzE/edit?usp=sharing)
 >
-> [📜 화면 정의서](https://docs.google.com/spreadsheets/d/101djfKLFrMKqzSC_E_5fZmMySo1hXaJiz0EI11R4UzE/edit?usp=sharing)
+> [📜 화면 정의서](https://www.figma.com/design/IQXRU8L9jOwecFTO41YZEx/FE_Team1_%ED%99%94%EB%A9%B4%EC%A0%95%EC%9D%98%EC%84%9C?node-id=1-2&t=l0ROYMz6dKhz1jmG-1)
