@@ -13,6 +13,8 @@ dist-ssr
 *.local
 .mcp.json
 docs/*
+!docs/assets/
+!docs/assets/**
 
 # Environment variables
 .env
