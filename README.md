@@ -51,7 +51,7 @@
 ### FE
 
 <div align="center">
-  <img src="./docs/assets/tech-stack.png" alt="기술 스택" />
+  <img src="./docs/assets/tech.png" alt="기술 스택" />
 </div>
 ---
 
